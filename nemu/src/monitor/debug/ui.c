@@ -38,6 +38,34 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args){
+	uint32_t n;
+	if(args == NULL) n = 1;
+	else sscanf(args , "%u" , &n);
+	cpu_exec(n);
+	return 0;
+}
+
+static int cmd_info(char *args){
+	char c;
+	sscanf(args , "%c" , &c);
+	if(c == 'r'){
+		int i;
+		for( i = R_EAX ; i <= R_EDI ; i ++){
+			printf("$%s is %x\n", regsl[i] , reg_l(i));
+		}
+	}
+	return 0;
+}
+
+static int cmd_x(char *args){
+	int a,b,i;
+	sscanf(args , "%d %x", &a , &b);
+	for( i = 0; i < a; i ++){
+		printf("Address: 0x%X  Value: 0x%X\n" , b+i*4 , swaddr_read(b+i*4 , 4));
+	}
+	return 0;
+}
 static struct {
 	char *name;
 	char *description;
@@ -46,7 +74,9 @@ static struct {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
-
+	{ "si", "Execute the next n steps of the program", cmd_si},
+	{ "info", "Print the value of the register or check point", cmd_info},
+	{ "x", "Print the next n addresses of the address", cmd_x},
 	/* TODO: Add more commands */
 
 };
