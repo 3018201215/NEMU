@@ -52,7 +52,7 @@ static int cmd_info(char *args){
 	if(c == 'r'){
 		int i;
 		for( i = R_EAX ; i <= R_EDI ; i ++){
-			printf("$%s is %x\n", regsl[i] , reg_l(i));
+			printf("$%s is 0x%X\n", regsl[i] , reg_l(i));
 		}
 	}
 	return 0;
