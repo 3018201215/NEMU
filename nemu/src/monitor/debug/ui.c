@@ -66,6 +66,14 @@ static int cmd_x(char *args){
 	}
 	return 0;
 }
+
+static int cmd_p(char *args){
+	char *c = NULL;
+	sscanf(args , "%s" , c);
+	bool *a = NULL;
+	return expr(c , a);
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -77,6 +85,7 @@ static struct {
 	{ "si", "Execute the next n steps of the program", cmd_si},
 	{ "info", "Print the value of the register or check point", cmd_info},
 	{ "x", "Print the next n addresses of the address", cmd_x},
+	{ "p", "Calculate the value of the expression", cmd_p},
 	/* TODO: Add more commands */
 
 };
