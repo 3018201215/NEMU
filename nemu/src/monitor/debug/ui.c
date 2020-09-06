@@ -68,10 +68,8 @@ static int cmd_x(char *args){
 }
 
 static int cmd_p(char *args){
-	char *c = NULL;
-	sscanf(args , "%s" , c);
 	bool *a = NULL;
-	return expr(c , a);
+	return expr(args , a);
 }
 
 static struct {
