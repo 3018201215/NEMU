@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ
+	NOTYPE = 256, EQ, AND, OR, REG, NO, NOE, NUM, HENUM, P, M
 
 	/* TODO: Add more token types */
 
@@ -24,6 +24,16 @@ static struct rule {
 
 	{" +",	NOTYPE},				// spaces
 	{"\\+", '+'},					// plus
+	{"\\-", '-'},
+	{"\\*", '*'},
+	{"\\/", '/'},
+	{"[0-9]+", NUM},
+	{"!=", NOE},
+	{"\\|\\|", OR},
+	{"\\&\\&", AND},
+	{"$[a-zA-Z]+", REG},
+	{"!", NO},
+	{"0[xX][0-9a-fA-F]+" , HENUM},
 	{"==", EQ}						// equal
 };
 
@@ -79,7 +89,33 @@ static bool make_token(char *e) {
 				 */
 
 				switch(rules[i].token_type) {
-					default: panic("please implement me");
+					case NOTYPE: break;
+					case REG: {
+						tokens[nr_token].type = rules[i].token_type;
+						strncpy(tokens[nr_token].str , substr_start+1 , substr_len-1);
+						tokens[nr_token].str[substr_len-1] = '\0';
+						nr_token ++;
+						break;
+					}
+					case NUM: {
+						tokens[nr_token].type = rules[i].token_type;
+						strncpy(tokens[nr_token].str , substr_start+1 , substr_len);
+						tokens[nr_token].str[substr_len] = '\0';
+						nr_token ++;
+						break;
+					}
+					case HENUM: {
+						tokens[nr_token].type = rules[i].token_type;
+						strncpy(tokens[nr_token].str , substr_start+1 , substr_len);
+						tokens[nr_token].str[substr_len] = '\0';
+						nr_token ++;
+						break;
+					}
+					default: {
+						tokens[nr_token].type = rules[i].token_type;
+						nr_token ++;
+						break;
+					}
 				}
 
 				break;
@@ -95,14 +131,143 @@ static bool make_token(char *e) {
 	return true; 
 }
 
+uint32_t eval(int p, int q);
+int check_parentheses(int p, int q);
+int match(int p,int q);
+
 uint32_t expr(char *e, bool *success) {
 	if(!make_token(e)) {
 		*success = false;
 		return 0;
 	}
-
+	int i;
+	for( i = 0; i< nr_token ; i ++){
+		if(tokens[i].type == '*' && (i == 0 || (tokens[i-1].type != NUM && tokens[i-1].type != HENUM && tokens[i-1].type != ')' && tokens[i-1].type != REG)))  tokens[i].type = P;
+		if(tokens[i].type == '-' && (i == 0 || (tokens[i-1].type != NUM && tokens[i-1].type != HENUM && tokens[i-1].type != ')' && tokens[i-1].type != REG)))  tokens[i].type = M;
+	}
+	*success = true ;
+	return eval(0 , nr_token-1);
 	/* TODO: Insert codes to evaluate the expression. */
 	panic("please implement me");
 	return 0;
 }
 
+uint32_t eval(int p, int q){
+	if(p > q) assert(0);
+	else if(p == q){
+		uint32_t a = 0;
+		switch(tokens[p].type){
+ 			case NUM:{
+				sscanf(tokens[p].str , "%u" , &a);
+				break;
+			}
+			case HENUM: {
+				sscanf(tokens[p].str , "%X" , &a);
+				break;
+			}
+			case REG: {
+				int i;
+				if(strlen(tokens[p].str) == 3){
+					for(i = R_EAX; i <= R_EDI; i ++)
+						if(strcmp(tokens[p].str , regsl[i]) == 0) break;
+					if(i > R_EDI){
+						if(strcmp(tokens[p].str , "eip") == 0) a = cpu.eip;
+						else assert(0);
+					}else a = reg_l(i);
+				}else if(strlen(tokens[p].str) == 2){
+					if(tokens[p].str[1] == 'x' || tokens[p].str[1] == 'p' || tokens[p].str[1] == 'i'){
+						for(i = R_AX; i <= R_DI; i ++){
+							if(strcmp(tokens[p].str , regsw[i]) == 0) break;
+						if(i <= R_DI) a = reg_w(i);
+						else assert(0);
+						}
+					}else if(tokens[p].str[1] == 'l' || tokens[p].str[1] == 'h'){
+						for(i = R_AL; i <= R_BH; i ++)
+							if(strcmp(tokens[p].str , regsb[i]) == 0) break;
+						if(i <= R_BH) a = reg_b(i);
+						else assert(0);
+					}
+				}
+			}
+		}
+		return a;
+	}else if(check_parentheses(p , q) == -1){
+		eval(p+1 , q-1);
+	}else{
+		int op=0,i;
+		for(i = p; i <= q; i ++){
+			if(tokens[i].type == '('){
+				if(match(i , q) == -1) assert(0);
+				else i = match(i , q);
+			}else if(tokens[i].type == OR){
+				op = i;
+			}else if(tokens[i].type == AND){
+				if(tokens[op].type == OR) continue;
+				op = i;
+			}else if(tokens[i].type == EQ || tokens[i].type == NOE){
+				if(tokens[op].type == AND || tokens[op].type == OR) continue;
+				op = i;
+			}else if(tokens[i].type == '+' || tokens[i].type == '-'){
+				if(tokens[op].type == AND || tokens[op].type == OR) continue;
+				if(tokens[op].type == EQ || tokens[op].type == NOE) continue;
+				op = i;
+			}else if(tokens[i].type == '*' || tokens[i].type == '/'){
+				if(tokens[op].type == AND || tokens[op].type == OR) continue;
+				if(tokens[op].type == EQ || tokens[op].type == NOE) continue;
+				if(tokens[op].type == '+' || tokens[i].type == '-') continue;
+				op = i;
+			}else if(tokens[i].type == NO || tokens[i].type == M || tokens[i].type == P){
+				if(tokens[op].type == AND || tokens[op].type == OR) continue;
+				if(tokens[op].type == EQ || tokens[op].type == NOE) continue;
+				if(tokens[op].type == '+' || tokens[i].type == '-') continue;
+				if(tokens[op].type == '*' || tokens[i].type == '/') continue;
+				op = i;
+			}
+		}
+
+		if( p == op || tokens[op].type == M || tokens[op].type == P || tokens[op].type == NO){
+			uint32_t val = eval(op+1 , q);
+			switch(tokens[op].type){
+				case P: return swaddr_read(val , 4);
+				case M: return -val;
+				case NO: return !val;
+				default: assert(0);
+			}
+		}
+
+		uint32_t val1 = eval(p , op-1);
+		uint32_t val2 = eval(op+1 , q);
+		switch(tokens[op].type){
+			case '+': return val1 + val2;
+			case '-': return val1 - val2;
+			case '*': return val1 * val2;
+			case '/': return val1 / val2;
+			case OR: return val1 || val2;
+			case AND: return val1 && val2;
+			case EQ: return val1 == val2;
+			case NOE: return val1 != val2;
+			default: assert(0);
+		}
+	}
+	return 0;
+}
+
+int check_parentheses(int p, int q){
+	if(tokens[p].type != '(') return 0;
+	else if(match(p , q) != -1) return 1;
+	else return 0;
+}
+
+int match(int p, int q){
+	int i, lc = 0, rc = 0, m = 0;
+	for(i = p ; i <= q ; i ++){
+		if(tokens[i].type == '(') lc ++;
+		if(tokens[i].type == ')') {
+			rc ++;
+			m = i;
+		}
+		if(rc > lc) return -1;
+	}
+	if(rc == lc) return m;
+	return -1;
+}
