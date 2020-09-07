@@ -225,7 +225,7 @@ uint32_t eval(int p, int q){
 				op = i;
 			}
 		}
-
+		printf("a %d %d %d\n", p,op,q);
 		if( p == op || tokens[op].type == M || tokens[op].type == P || tokens[op].type == NO){
 			uint32_t val = eval(op+1 , q);
 			switch(tokens[op].type){
@@ -240,9 +240,9 @@ uint32_t eval(int p, int q){
 		uint32_t val2 = eval(op+1 , q);
 		printf("Val: %u     %u\n", val1, val2);
 		switch(tokens[op].type){
-			case '+': {printf("asdsadasdsad\n"); return val1 + val2; printf("wwqqwqq\n");}
+			case '+': return val1 + val2;
 			case '-': return val1 - val2;
-			case '*': {printf("wwwwww\n"); return val1 * val2;}
+			case '*': return val1 * val2;
 			case '/': return val1 / val2;
 			case OR: return val1 || val2;
 			case AND: return val1 && val2;
