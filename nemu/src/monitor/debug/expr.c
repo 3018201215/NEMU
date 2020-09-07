@@ -190,7 +190,7 @@ uint32_t eval(int p, int q){
 				}
 				break;
 			}
-		}
+		}	
 		return a;
 	}else if(check_parentheses(p , q) == -1){
 		eval(p+1 , q-1);
@@ -260,15 +260,15 @@ int check_parentheses(int p, int q){
 }
 
 int match(int p, int q){
-	int i, lc = 0, rc = 0, m = 0;
+	int i, lc = 0, m = 0;
 	for(i = p ; i <= q ; i ++){
 		if(tokens[i].type == '(') lc ++;
 		if(tokens[i].type == ')') {
-			rc ++;
+			lc --;
 			m = i;
 		}
-		if(rc > lc) return -1;
+		if(lc < 0) return -1;
 	}
-	if(rc == lc) return m;
+	if(lc == 0) return m;
 	return -1;
 }
