@@ -193,7 +193,7 @@ uint32_t eval(int p, int q){
 		}
 		return a;
 	}else if(check_parentheses(p , q) == 1){
-		eval(p+1 , q-1);
+		return eval(p+1 , q-1);
 	}else{
 		int op=0,i;
 		for(i = p; i <= q; i ++){
