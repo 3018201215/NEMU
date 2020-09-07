@@ -70,7 +70,7 @@ static int cmd_x(char *args){
 static int cmd_p(char *args){
 	bool a;
 	uint32_t n = expr(args , &a);
-	if(a) printf("%u" , n);
+	if(a) printf("%u\n" , n);
 	else assert(0);
 	return 0;
 }

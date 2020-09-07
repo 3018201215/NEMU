@@ -190,7 +190,8 @@ uint32_t eval(int p, int q){
 				}
 				break;
 			}
-		}	
+		}
+		printf("%u\n", a);	
 		return a;
 	}else if(check_parentheses(p , q) == 1){
 		eval(p+1 , q-1);
@@ -225,7 +226,6 @@ uint32_t eval(int p, int q){
 				op = i;
 			}
 		}
-		printf("%d\n", op);
 
 		if( p == op || tokens[op].type == M || tokens[op].type == P || tokens[op].type == NO){
 			uint32_t val = eval(op+1 , q);
