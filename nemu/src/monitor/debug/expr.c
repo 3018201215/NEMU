@@ -158,7 +158,7 @@ uint32_t eval(int p, int q){
 		uint32_t a = 0;
 		switch(tokens[p].type){
  			case NUM:{
-				sscanf(tokens[p].str , "%u" , &a);
+				sscanf(tokens[p].str , "0x%X" , &a);
 				break;
 			}
 			case HENUM: {
