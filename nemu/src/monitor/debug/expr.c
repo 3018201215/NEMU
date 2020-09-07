@@ -251,7 +251,7 @@ uint32_t eval(int p, int q){
 			default: assert(0);
 		}
 	}
-	return 1;
+	return 2;
 }
 
 int check_parentheses(int p, int q){
