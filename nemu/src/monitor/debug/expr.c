@@ -225,6 +225,7 @@ uint32_t eval(int p, int q){
 				op = i;
 			}
 		}
+		printf("1 %d\n", op);
 
 		if( p == op || tokens[op].type == M || tokens[op].type == P || tokens[op].type == NO){
 			uint32_t val = eval(op+1 , q);
