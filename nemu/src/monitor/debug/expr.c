@@ -33,7 +33,7 @@ static struct rule {
 	{"!=", NOE},
 	{"\\|\\|", OR},
 	{"\\&\\&", AND},
-	{"$[a-zA-Z]+", REG},
+	{"\\$[a-zA-Z]+", REG},
 	{"!", NO},
 	{"0[xX][0-9a-fA-F]+" , HENUM},
 	{"==", EQ}						// equal
@@ -225,7 +225,7 @@ uint32_t eval(int p, int q){
 				op = i;
 			}
 		}
-		printf("a %d %d %d\n", p,op,q);
+
 		if( p == op || tokens[op].type == M || tokens[op].type == P || tokens[op].type == NO){
 			uint32_t val = eval(op+1 , q);
 			switch(tokens[op].type){
@@ -238,7 +238,7 @@ uint32_t eval(int p, int q){
 
 		uint32_t val1 = eval(p , op-1);
 		uint32_t val2 = eval(op+1 , q);
-		printf("Val: %u     %u\n", val1, val2);
+
 		switch(tokens[op].type){
 			case '+': return val1 + val2;
 			case '-': return val1 - val2;
