@@ -35,7 +35,7 @@ static struct rule {
 	{"\\&\\&", AND},
 	{"\\$[a-zA-Z]+", REG},
 	{"!", NO},
-	{"\\0[xX][0-9a-fA-F]+" , HENUM},
+	{"\\0x[0-9a-fA-F]+" , HENUM},
 	{"==", EQ}						// equal
 };
 
