@@ -68,8 +68,11 @@ static int cmd_x(char *args){
 }
 
 static int cmd_p(char *args){
-	bool *a = NULL;
-	return expr(args , a);
+	bool a;
+	uint32_t n = expr(args , &a);
+	if(a) printf("%u" , n);
+	else assert(0);
+	return 0;
 }
 
 static struct {
