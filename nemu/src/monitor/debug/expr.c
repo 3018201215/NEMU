@@ -35,7 +35,7 @@ static struct rule {
 	{"\\&\\&", AND},
 	{"\\$[a-zA-Z]+", REG},
 	{"!", NO},
-	{"\\0[xX][0-9a-fA-F]+" , HENUM},
+	{"\\b0[xX][0-9a-fA-F]+\\b" , HENUM},
 	{"==", EQ}						// equal
 };
 
@@ -158,7 +158,7 @@ uint32_t eval(int p, int q){
 		uint32_t a = 0;
 		switch(tokens[p].type){
  			case NUM:{
-				sscanf(tokens[p].str , "0x%X" , &a);
+				sscanf(tokens[p].str , "%u" , &a);
 				break;
 			}
 			case HENUM: {
