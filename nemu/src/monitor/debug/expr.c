@@ -146,10 +146,9 @@ uint32_t expr(char *e, bool *success) {
 		if(tokens[i].type == '-' && (i == 0 || (tokens[i-1].type != NUM && tokens[i-1].type != HENUM && tokens[i-1].type != ')' && tokens[i-1].type != REG)))  tokens[i].type = M;
 	}
 	*success = true ;
-	return eval(0 , nr_token-1);
 	/* TODO: Insert codes to evaluate the expression. */
 	panic("please implement me");
-	return 0;
+	return eval(0 , nr_token-1);
 }
 
 uint32_t eval(int p, int q){
