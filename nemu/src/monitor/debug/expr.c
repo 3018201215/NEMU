@@ -240,7 +240,7 @@ uint32_t eval(int p, int q){
 		uint32_t val2 = eval(op+1 , q);
 		printf("Val: %u     %u\n", val1, val2);
 		switch(tokens[op].type){
-			case '+': {printf("asdsadasdsad\n"); return val1 + val2;}
+			case '+': {printf("asdsadasdsad\n"); return val1 + val2; printf("wwqqwqq\n");}
 			case '-': return val1 - val2;
 			case '*': {printf("wwwwww\n"); return val1 * val2;}
 			case '/': return val1 / val2;
