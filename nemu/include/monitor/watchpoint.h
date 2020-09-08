@@ -16,5 +16,5 @@ WP* new_wp();
 void free_wp(WP*);
 bool check();
 void print_watchpoint();
-void delete_wp(char *);
+void delete_wp(int );
 #endif

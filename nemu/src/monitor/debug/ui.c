@@ -79,7 +79,9 @@ static int cmd_p(char *args){
 
 static int cmd_d(char *args){
 	if(args == NULL) assert(0);
-	delete_wp(args);
+	int n;
+	sscanf(args, "%d", &n);
+	delete_wp(n);
 	return 0;
 }
 
@@ -106,7 +108,7 @@ static struct {
 	{ "info", "Print the value of the register or watchpoint", cmd_info},
 	{ "x", "Print the next n addresses of the address", cmd_x},
 	{ "p", "Calculate the value of the expression", cmd_p},
-	{ "d", "Delete a watchpoint", cmd_d},
+	{ "d", "Delete a watchpoint through it's NO", cmd_d},
 	{ "w", "Set up a watchpoint", cmd_w},
 	/* TODO: Add more commands */
 

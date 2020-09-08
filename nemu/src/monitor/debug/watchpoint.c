@@ -37,14 +37,12 @@ WP* new_wp(){
 
 void free_wp(WP* wp){
 	WP *p = head;
-	WP *s = free_;
 	while(p->next != wp) p = p->next;
-	while(s->next != NULL) s = s->next;
 	p->next = wp->next;
-	wp->next = NULL;
+	wp->next = free_;
 	wp->info[0] = '\0';
 	wp->value = 0;
-	s->next = wp;
+	free_ = wp;
 }
 
 bool check(){
@@ -79,12 +77,7 @@ void print_watchpoint(){
 	}
 }
 
-void delete_wp(char *c){
-	WP *p = head;
-	while(p){
-		if(strcmp(p->info, c) == 0) break;
-		p = p->next;
-	}
-	if(p == NULL) assert(0);
-	else free_wp(p);
+void delete_wp(int num){
+	WP* p = &wp_pool[num];
+	free_wp(p);
 }
