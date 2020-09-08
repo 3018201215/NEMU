@@ -38,7 +38,8 @@ void new_wp(char *c){
 		while(q->next != NULL) q = q->next;
 		q->next = p;
 	}
-	printf("%s\n" , p->info);
+	WP *q = free_;
+	while(q) {printf("%s\n", q->info); q=q->next;}
 }
 
 void free_wp(WP* wp){
