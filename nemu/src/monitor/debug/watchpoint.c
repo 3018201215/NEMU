@@ -72,11 +72,15 @@ void print_watchpoint(){
 	WP *p = head;
 	WP *q = free_;
 	printf("busy: \n");
-	while(p->next != NULL)
+	while(p!= NULL){
 		printf("NO: %d expr: %s value:%d\n", p->NO, p->info, p->value);
+		p = p->next;
+	}
 	printf("free: \n");
-	while(q->next != NULL)
+	while(q!= NULL){
 		printf("NO: %d info: %s value:%d\n", q->NO, q->info, q->value);
+		q = q->next;
+	}
 }
 
 void delete_wp(char *c){
