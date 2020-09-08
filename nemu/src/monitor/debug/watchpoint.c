@@ -24,7 +24,6 @@ void init_wp_pool() {
 
 void new_wp(char *c){
 	WP *p = free_;
-	printf("%s\n", c);
 	if(p == NULL) assert(0);
 	bool b;
 	p->info = c;
@@ -32,11 +31,12 @@ void new_wp(char *c){
 	if(!b) assert(0);
 	free_= p->next;
 	p->next = NULL;
-	if(head == NULL) head = p;
+	if(head == NULL){ head = p;printf("%s\n", head->info);}
 	else{
 		WP *q = head;
 		while(q->next != NULL) q = q->next;
 		q->next = p;
+		printf("%s\n", q->next->info);
 	}
 }
 
