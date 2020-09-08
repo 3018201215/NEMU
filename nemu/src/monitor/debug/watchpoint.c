@@ -24,6 +24,7 @@ void init_wp_pool() {
 
 void new_wp(char *c){
 	WP *p = free_;
+	printf("%s\n", c);
 	if(p == NULL) assert(0);
 	bool b;
 	p->info = c;
