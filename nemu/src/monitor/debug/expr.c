@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, AND, OR, REG, NO, NOE, NUM, HENUM, P, M
+	NOTYPE = 256, EQ, AND, OR, REG, NO, NOE, NUM, HENUM, P, M, VAL
 
 	/* TODO: Add more token types */
 
@@ -29,7 +29,8 @@ static struct rule {
 	{"\\/", '/'},
 	{"\\(", '('},
 	{"\\)", ')'},
-	{"\\0[xX][0-9a-fA-F]+" , HENUM},
+	{"[0-9a-zA-Z_]+", VAL},
+	{"\\0[xX][0-9a-fA-F]+", HENUM},
 	{"[0-9]+", NUM},
 	{"!=", NOE},
 	{"\\|\\|", OR},
@@ -113,6 +114,13 @@ static bool make_token(char *e) {
 						nr_token ++;
 						break;
 					}
+					case VAL: {
+						tokens[nr_token].type = rules[i].token_type;
+						strncpy(tokens[nr_token].str , substr_start , substr_len);
+						tokens[nr_token].str[substr_len] = '\0';
+						nr_token ++;
+						break; 
+					}
 					default: {
 						tokens[nr_token].type = rules[i].token_type;
 						nr_token ++;
@@ -190,6 +198,9 @@ uint32_t eval(int p, int q){
 				}
 				break;
 			}
+			case VAL: {
+				break;
+			}
 		}
 		return a;
 	}else if(check_parentheses(p , q) == 1){
@@ -251,7 +262,7 @@ uint32_t eval(int p, int q){
 			default: assert(0);
 		}
 	}
-	return 2;
+	return 0;
 }
 
 int check_parentheses(int p, int q){
