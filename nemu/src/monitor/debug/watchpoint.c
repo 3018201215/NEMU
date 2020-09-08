@@ -81,8 +81,8 @@ void print_watchpoint(){
 
 void delete_wp(char *c){
 	WP *p = head;
-	while(strcmp(p->info, c) != 0){
-		if(p == NULL) break;
+	while(p){
+		if(strcmp(p->info, c) == 0) break;
 		p = p->next;
 	}
 	if(p == NULL) assert(0);
