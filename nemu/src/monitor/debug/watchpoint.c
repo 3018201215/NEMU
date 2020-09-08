@@ -26,7 +26,7 @@ void new_wp(char *c){
 	WP *p = free_;
 	if(p == NULL) assert(0);
 	bool b;
-	strcpy(p->info , c);
+	strcpy(p->info, c);
 	p->value = expr(c, &b);
 	if(!b) assert(0);
 	free_= p->next;
