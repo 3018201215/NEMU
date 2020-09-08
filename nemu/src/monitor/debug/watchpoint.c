@@ -81,6 +81,7 @@ void print_watchpoint(){
 }
 
 void delete_wp(int num){
+	if(num < 0 || num >= NR_WP) assert(0);
 	WP* p = &wp_pool[num];
 	free_wp(p);
 }
