@@ -30,7 +30,7 @@ void new_wp(char *c){
 	p->info = c;
 	p->value = expr(c, &b);
 	if(!b) assert(0);
-	free_->next = p->next;
+	free_= p->next;
 	printf("%d\n", free_->next->NO);
 	p->next = NULL;
 	if(head == NULL) head = p;
