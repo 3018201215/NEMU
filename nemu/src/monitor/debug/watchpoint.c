@@ -22,7 +22,7 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
-WP* new_wp(char *c){
+void new_wp(char *c){
 	WP *p = free_;
 	if(p == NULL) assert(0);
 	bool b;
@@ -32,8 +32,11 @@ WP* new_wp(char *c){
 	free_->next = p->next;
 	p->next = NULL;
 	if(head == NULL) head = p;
-	else head->next = p;
-	return p;
+	else{
+		WP *q = head;
+		while(q->next != NULL) q = q->next;
+		q->next = p;
+	}
 }
 
 void free_wp(WP* wp){
@@ -48,7 +51,7 @@ void free_wp(WP* wp){
 	s->next = wp;
 }
 
-bool check(WP *wp){
+bool check(WP* wp){
 	WP *p = head;
 	while(p != wp) p = p->next;
 	bool b , c = true;
@@ -62,7 +65,7 @@ bool check(WP *wp){
 	return c;
 }
 
-void print_checkpoint(){
+void print_watchpoint(){
 	WP *p = head;
 	WP *q = free_;
 	printf("busy: \n");
@@ -73,7 +76,9 @@ void print_checkpoint(){
 		printf("NO: %d info: %s value:%d\n", q->NO, q->info, q->value);
 }
 
-void delete_wp(int n){
-	WP *p = &wp_pool[n];
-	free_wp(p);
+void delete_wp(char *c){
+	WP *p = head;
+	while(p->info != c && p) p = p->next;
+	if(p == NULL) assert(0);
+	else free_wp(p);
 }

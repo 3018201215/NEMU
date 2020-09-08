@@ -54,6 +54,8 @@ static int cmd_info(char *args){
 		for( i = R_EAX ; i <= R_EDI ; i ++){
 			printf("$%s is 0x%X\n", regsl[i] , reg_l(i));
 		}
+	}else if(c == 'w'){
+		print_watchpoint();
 	}
 	return 0;
 }
@@ -75,6 +77,18 @@ static int cmd_p(char *args){
 	return 0;
 }
 
+static int cmd_d(char *args){
+	if(args == NULL) assert(0);
+	delete_wp(args);
+	return 0;
+}
+
+static int cmd_w(char *args){
+	if(args == NULL) assert(0);
+	new_wp(args);
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -84,9 +98,11 @@ static struct {
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
 	{ "si", "Execute the next n steps of the program", cmd_si},
-	{ "info", "Print the value of the register or check point", cmd_info},
+	{ "info", "Print the value of the register or watchpoint", cmd_info},
 	{ "x", "Print the next n addresses of the address", cmd_x},
 	{ "p", "Calculate the value of the expression", cmd_p},
+	{ "d", "Delete a watchpoint", cmd_d},
+	{ "w", "Set up a watchpoint", cmd_w},
 	/* TODO: Add more commands */
 
 };
