@@ -51,16 +51,19 @@ void free_wp(WP* wp){
 	s->next = wp;
 }
 
-bool check(WP* wp){
+bool check(){
 	WP *p = head;
-	while(p != wp) p = p->next;
-	bool b , c = true;
-	uint32_t val = expr(p->info , &b);
-	if(!b) assert(0);
-	if(p->value != val){
-		printf("CheckPoint hit! NO: %d, expr: %s old value: %d, new value: %d\n", p->NO, p->info, p->value, val);
-		c = false;
-		p->value = val;
+	bool c = true;
+	while(p){
+		bool b;
+		uint32_t val = expr(p->info , &b);
+		if(!b) assert(0);
+		if(p->value != val){
+			printf("CheckPoint hit! NO: %d, expr: %s old value: %d, new value: %d\n", p->NO, p->info, p->value, val);
+			c = false;
+			p->value = val;
+		}
+		p = p->next;
 	}
 	return c;
 }
