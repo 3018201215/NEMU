@@ -85,7 +85,12 @@ static int cmd_d(char *args){
 
 static int cmd_w(char *args){
 	if(args == NULL) assert(0);
-	new_wp(args);
+	WP* p = new_wp(args);
+	bool b;
+	p->value = expr(args, &b);
+	strcpy(p->info, args);
+	if(!b) assert(0);
+	printf("%d %s %d\n", p->NO, p->info, p->value);
 	return 0;
 }
 
