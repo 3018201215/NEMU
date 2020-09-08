@@ -30,8 +30,8 @@ void new_wp(char *c){
 	p->info = c;
 	p->value = expr(c, &b);
 	if(!b) assert(0);
-	printf("%s\n", p->next->info);
 	free_->next = p->next;
+	printf("%d\n", free_->next->NO);
 	p->next = NULL;
 	if(head == NULL) head = p;
 	else{
