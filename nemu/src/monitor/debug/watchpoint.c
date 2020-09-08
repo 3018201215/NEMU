@@ -31,7 +31,6 @@ void new_wp(char *c){
 	p->value = expr(c, &b);
 	if(!b) assert(0);
 	free_= p->next;
-	printf("%d\n", free_->next->NO);
 	p->next = NULL;
 	if(head == NULL) head = p;
 	else{
@@ -39,8 +38,6 @@ void new_wp(char *c){
 		while(q->next != NULL) q = q->next;
 		q->next = p;
 	}
-	WP *q = free_;
-	while(q) {printf("%s\n", q->info); q=q->next;}
 }
 
 void free_wp(WP* wp){
