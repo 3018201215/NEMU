@@ -38,6 +38,7 @@ void new_wp(char *c){
 		while(q->next != NULL) q = q->next;
 		q->next = p;
 	}
+	printf("%s\n" , p->info);
 }
 
 void free_wp(WP* wp){
@@ -79,7 +80,7 @@ void print_watchpoint(){
 	}
 	printf("free: \n");
 	while(q!= NULL){
-		printf("NO: %d info: %s value:%d\n", q->NO, q->info, q->value);
+		printf("NO: %d expr: %s value:%d\n", q->NO, q->info, q->value);
 		q = q->next;
 	}
 }
