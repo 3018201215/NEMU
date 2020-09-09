@@ -61,10 +61,14 @@ static int cmd_info(char *args){
 }
 
 static int cmd_x(char *args){
-	int a,b,i;
-	sscanf(args , "%d %x", &a , &b);
+	int a,i;
+	char b;
+	sscanf(args , "%d %s", &a , &b);
+	bool suc;
+	uint32_t num = expr(&b , &suc);
+	if(!suc) assert(0);
 	for( i = 0; i < a; i ++){
-		printf("Address: 0x%X  Value: 0x%X\n" , b+i*4 , swaddr_read(b+i*4 , 4));
+		printf("Address: 0x%X  Value: 0x%X\n" , num+i*4 , swaddr_read(num+i*4 , 4));
 	}
 	return 0;
 }
