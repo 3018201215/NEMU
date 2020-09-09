@@ -66,7 +66,6 @@ static int cmd_x(char *args){
 	sscanf(args , "%d %s", &a , &b);
 	bool suc;
 	uint32_t num = expr(&b , &suc);
-	printf("0x%X\n", num);
 	if(!suc) assert(0);
 	for( i = 0; i < a; i ++){
 		printf("Address: 0x%X  Value: 0x%X\n" , num+i*4 , swaddr_read(num+i*4 , 4));
