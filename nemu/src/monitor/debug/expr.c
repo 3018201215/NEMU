@@ -114,13 +114,6 @@ static bool make_token(char *e) {
 						nr_token ++;
 						break;
 					}
-					case VAL: {
-						tokens[nr_token].type = rules[i].token_type;
-						strncpy(tokens[nr_token].str , substr_start , substr_len);
-						tokens[nr_token].str[substr_len] = '\0';
-						nr_token ++;
-						break; 
-					}
 					default: {
 						tokens[nr_token].type = rules[i].token_type;
 						nr_token ++;
@@ -196,9 +189,6 @@ uint32_t eval(int p, int q){
 						else assert(0);
 					}
 				}
-				break;
-			}
-			case VAL: {
 				break;
 			}
 		}
