@@ -53,9 +53,14 @@ clean: clean-cpp
 
 ##### some convinient rules #####
 
-USERPROG := obj/testcase/mov
+	--- Makefile
+	+++ Makefile
+	@@ -56,2 +56,2 @@
+//USERPROG := obj/testcase/mov
+USERPROG := obj/testcase/mov-c
 ENTRY := $(USERPROG)
-
+ 
+	
 entry: $(ENTRY)
 	objcopy -S -O binary $(ENTRY) entry
 
@@ -74,9 +79,3 @@ test: $(nemu_BIN) $(testcase_BIN) entry
 submit: clean
 	cd .. && zip -r $(STU_ID).zip $(shell pwd | grep -o '[^/]*$$')
 
-	--- Makefile
-	+++ Makefile
-	@@ -56,2 +56,2 @@
--USERPROG = obj/testcase/mov
-+USERPROG = obj/testcase/mov-c
-ENTRY = $(USERPROG) 
