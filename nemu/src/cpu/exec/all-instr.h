@@ -28,3 +28,5 @@
 #include "special/special.h"
 
 #include "call/call.h"
+
+#include "test/test.h"
