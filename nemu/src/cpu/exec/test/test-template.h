@@ -3,7 +3,7 @@
 #define instr test
 
 make_helper(concat(test_r_, SUFFIX)) {
-	swaddr_t addr = instr_fetch(eip + 1, 1);
+	swaddr_t addr = op_src->val;
 	uint32_t val = swaddr_read(addr, 4);
 	uint32_t result = val && val;
 	if(result == 0 ) cpu.EFLAGS = 0x00000042;
