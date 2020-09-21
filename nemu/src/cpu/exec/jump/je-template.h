@@ -4,7 +4,7 @@
 
 static void do_execute(){
 	uint32_t addr = op_src->val;
-	print_asm("jump 0x%X", cpu.eip+1+DATA_BYTE+addr);
+	print_asm("jump 0x%X  0x%X", cpu.eip+1+DATA_BYTE+addr, addr);
 	if(cpu.ZF == 1) cpu.eip += addr;
 }
 
