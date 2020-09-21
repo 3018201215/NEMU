@@ -15,4 +15,5 @@
 /* for instruction encoding overloading */
 
 make_helper_v(cmp_r2rm)
+make_helper_v(cmp_i2rm)
 
