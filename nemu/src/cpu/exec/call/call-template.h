@@ -19,7 +19,7 @@ make_helper(concat(call_i_, SUFFIX)){
 	reg_l(R_ESP) -= DATA_BYTE;
 	swaddr_write(reg_l(R_ESP), 4, cpu.eip + len);
 	DATA_TYPE_S addr = op_src->val;
-	print_asm("call 0x%X  %d  %d 0x%X", cpu.eip+1+len+addr, len, addr, cpu.eip);
+	print_asm("call 0x%X", cpu.eip+1+len+addr);
 	cpu.eip += addr;
 	return len+1;
 }
