@@ -4,7 +4,7 @@
 
 make_helper(concat(je_i_, SUFFIX)){
 	if(cpu.EFLAGS == 0x42){
-		uint32_t addr = op_src->val;
+		uint32_t addr = op_dest->val;
 		cpu.eip = addr - 2;
 		print_asm("jump" str(SUFFIX) " 0x%X",addr);
 	}
