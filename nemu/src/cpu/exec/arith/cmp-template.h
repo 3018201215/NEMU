@@ -4,7 +4,7 @@
 
 static void do_execute(){
 	DATA_TYPE_S val1 = op_src->val;
-	DATA_TYPE_S val2 = op_src2->val;
+	DATA_TYPE_S val2 = op_dest->val;
 	uint32_t result = val2 - val1;
 	int len = (DATA_BYTE << 3) - 1;
 	cpu.CF = 0;
