@@ -22,6 +22,9 @@ static void do_execute() {
 	//op_dest->val = result;
 	print_asm("sub" str(SUFFIX) " val1: 0x%X, val2: 0x%X, result: 0x%X", op_src->val, op_dest->val, result);
 }
+#if DATA_BYTE == 2 || DATA_BYTE == 4
+make_instr_helper(si2rm)
+#endif
 
 make_instr_helper(i2rm)
 make_instr_helper(r2rm)
