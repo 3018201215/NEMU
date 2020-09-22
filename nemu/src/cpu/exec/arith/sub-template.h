@@ -3,8 +3,7 @@
 #define instr sub
 
 static void do_execute() {
-	if(DATA_BYTE == 1) op_src->val = (int8_t) op_src->val;
-	uint32_t result = op_dest->val - op_src->val;
+	DATA_TYPE result = op_dest->val - op_src->val;
 	//op_dest->val = result;
 	int len = (DATA_BYTE << 3) - 1;
 	cpu.CF = 0;
