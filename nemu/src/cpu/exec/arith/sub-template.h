@@ -5,7 +5,7 @@
 static void do_execute() {
 	if(DATA_BYTE == 1) op_src->val = (int8_t) op_src->val;
 	uint32_t result = op_dest->val - op_src->val;
-	print_asm("sub" str(SUFFIX) "val1: 0x%X, val2: 0x%X, result: 0x%X\n", op_src->val, op_dest->val, result);
+	print_asm("sub" str(SUFFIX) " val1: 0x%X, val2(old): 0x%X, result: 0x%X", op_src->val, op_dest->val, result);
 	op_dest->val = result;
 	int len = (DATA_BYTE << 3) - 1;
 	cpu.CF = 0;
@@ -20,7 +20,7 @@ static void do_execute() {
 	if(result == 0){
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
-	print_asm("sub" str(SUFFIX) "val1: 0x%X, val2: 0x%X, result: 0x%X", op_src->val, op_dest->val, result);
+	print_asm("sub" str(SUFFIX) " val1: 0x%X, val2: 0x%X, result: 0x%X", op_src->val, op_dest->val, result);
 }
 
 make_instr_helper(i2rm)
