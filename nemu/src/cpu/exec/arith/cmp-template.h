@@ -7,9 +7,11 @@ static void do_execute(){
 	DATA_TYPE_S val2 = op_dest->val;
 	uint32_t result = val2 - val1;
 	int len = (DATA_BYTE << 3) - 1;
-	cpu.CF = 0;
-	cpu.OF = 0;
+	cpu.CF = val2 < val1;
 	cpu.SF = result >> len;
+	int a = val1 >> len;
+	int b = val2 >> len;
+	cpu.OF = (a != b && a == cpu.SF);
 	uint32_t s = result;
 	int i;
 	for(i=1; i<8; i++){
@@ -19,7 +21,7 @@ static void do_execute(){
 	if(result == 0){
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
-	print_asm("cmp" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d, eflags: 0x%X", val1, val2, result, cpu.EFLAGS);
+	print_asm("cmp" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d", val1, val2, result);
 }
 
 make_instr_helper(r2rm);

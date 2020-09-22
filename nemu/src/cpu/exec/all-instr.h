@@ -35,3 +35,4 @@
 #include "con-trans/call.h"
 #include "con-trans/ret.h"
 #include "con-trans/jump.h"
+#include "con-trans/jbe.h"
