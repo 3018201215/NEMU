@@ -22,6 +22,7 @@
 #include "logic/shl.h"
 #include "logic/shr.h"
 #include "logic/shrd.h"
+#include "logic/test.h"
 
 #include "string/rep.h"
 
@@ -29,9 +30,6 @@
 
 #include "special/special.h"
 
-#include "call/call.h"
-
-#include "test/test.h"
-
-#include "jump/je.h"
-#include "jump/ret.h"
+#include "con-trans/je.h"
+#include "con-trans/call.h"
+#include "con-trans/ret.h"
