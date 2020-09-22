@@ -19,7 +19,7 @@ static void do_execute() {
 	if(result == 0){
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
-	//op_dest->val = result;
+	op_dest->val = result;
 	print_asm("sub" str(SUFFIX) " val1: 0x%X, val2: 0x%X, result: 0x%X", op_src->val, op_dest->val, result);
 }
 #if DATA_BYTE == 2 || DATA_BYTE == 4
