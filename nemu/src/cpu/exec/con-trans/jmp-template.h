@@ -1,6 +1,6 @@
 #include "cpu/exec/template-start.h"
 
-#define instr jump
+#define instr jmp
 
 static void do_execute(){
 	DATA_TYPE_S addr = op_src->val;
