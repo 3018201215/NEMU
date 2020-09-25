@@ -20,7 +20,7 @@ static void do_execute() {
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
 	op_dest->val = result;
-	print_asm("sub" str(SUFFIX) " val1: 0x%X, val2: 0x%X, result: 0x%X", op_src->val, op_dest->val, result);
+	print_asm_template2();
 }
 #if DATA_BYTE == 2 || DATA_BYTE == 4
 make_instr_helper(si2rm)
