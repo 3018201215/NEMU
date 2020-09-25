@@ -3,7 +3,10 @@
 #define instr lea
 
 static void do_execute(){
-	//OPREND_W(op_dest, op_src);
+	// if(DATA_BYTE == 2){
+	// 	op_src = op_src && 0xFFFF;
+	// }
+	// OPERAND_W(op_dest, op_src);
 	print_asm_template2();
 }
 

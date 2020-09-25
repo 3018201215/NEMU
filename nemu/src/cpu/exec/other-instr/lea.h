@@ -2,8 +2,5 @@
 #define __LEA_H__
 
 make_helper(lea_r2rm_v);
-make_helper(lea_r2rm_b);
-
-
 
 #endif
