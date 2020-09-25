@@ -7,8 +7,18 @@ static void do_execute () {
 	OPERAND_W(op_dest, result);
 
 	/* TODO: Update EFLAGS. */
-	panic("please implement me");
-
+	//panic("please implement me");
+	cpu.CF = 0;
+	cpu.OF = 0;
+	cpu.ZF = !result;
+	int len = (DATA_BYTE << 3) - 1;
+	cpu.SF = result >> len;
+	DATA_TYPE s = result;
+	int i;	
+	for(i=1; i<8; i++){
+		s ^= result >> i;	
+	}
+	cpu.PF = !(s && 1);
 	print_asm_template2();
 }
 
