@@ -21,7 +21,8 @@ static void do_execute(){
 	if(result == 0){
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
-	print_asm("cmp" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d", val1, val2, result);
+	//print_asm("cmp" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d", val1, val2, result);
+	print_asm_template2();
 }
 #if DATA_BYTE == 2 || DATA_BYTE == 4
 make_instr_helper(si2rm);
