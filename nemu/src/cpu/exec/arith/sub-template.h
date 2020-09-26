@@ -19,7 +19,7 @@ static void do_execute() {
 	if(result == 0){
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
-	op_dest->val = result;
+	OPERAND_W(op_dest, result);
 	print_asm_template2();
 }
 #if DATA_BYTE == 2 || DATA_BYTE == 4
