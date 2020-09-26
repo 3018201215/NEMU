@@ -3,10 +3,10 @@
 #define instr leave
 
 make_helper(concat(leave_, SUFFIX)){
-	DATA_TYPE val = MEM_R(cpu.ebp);
-	cpu.esp = MEM_R(val);
-	reg_l(R_EBP) += 4;
-	print_asm("leave  0x%X  0x%X", val, cpu.esp);
+	cpu.esp = cpu.ebp;
+	cpu.ebp = MEM_R(cpu.esp);
+	reg_l(R_ESP) += DATA_BYTE;
+	print_asm("leave  0x%X  0x%X", cpu.ebp, cpu.esp);
 	return 1;
 }
 
