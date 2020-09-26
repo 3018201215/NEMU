@@ -3,8 +3,9 @@
 #define instr pop
 
 static void do_execute(){
-	op_dest->val = swaddr_read(reg_l(R_ESP), DATA_BYTE);
-	reg_l(R_ESP) += 4;
+	OPERAND_W(op_src, swaddr_read(reg_l(R_ESP), DATA_BYTE));
+	MEM_W(cpu.esp, 0);
+	reg_l(R_ESP) += DATA_BYTE;
 	print_asm_template1();
 }
 
