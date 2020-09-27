@@ -27,7 +27,7 @@
 static void do_execute(){
 	swaddr_t val1 = op_src->val;
 	swaddr_t val2 = op_dest->val;
-	uint32_t result = val1 && val2;
+	uint32_t result = val1 & val2;
 	int len = (DATA_BYTE << 3) - 1;
 	cpu.CF = 0;
 	cpu.OF = 0;
