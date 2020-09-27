@@ -41,8 +41,8 @@ static void do_execute(){
 	if(result == 0){
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
-	print_asm("test" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d, eflags: 0x%X", val1, val2, result, cpu.EFLAGS);
-	//print_asm_template2();
+	// print_asm("test" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d, eflags: 0x%X", val1, val2, result, cpu.EFLAGS);
+	print_asm_template2();
 }
 
 make_instr_helper(r2rm)
