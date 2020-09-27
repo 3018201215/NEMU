@@ -19,8 +19,8 @@ static void do_execute () {
 		s ^= result >> i;	
 	}
 	cpu.PF = !(s & 1);
-	//print_asm_template2();
-	print_asm("and val1:0x%X, val2:0x%X", op_dest->val, op_src->val);
+	print_asm_template2();
+	//print_asm("and val1:0x%X, val2:0x%X", op_dest->val, op_src->val);
 }
 
 make_instr_helper(i2a)
