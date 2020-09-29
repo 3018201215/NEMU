@@ -3,6 +3,7 @@
 #define instr sub
 
 static void do_execute() {
+	DATA_TYPE val1 = op_dest->val;
 	DATA_TYPE result = op_dest->val - op_src->val;
 	int len = (DATA_BYTE << 3) - 1;
 	cpu.CF = op_dest->val < op_src->val;
@@ -22,7 +23,7 @@ static void do_execute() {
 	OPERAND_W(op_dest, result);
 	//swaddr_write(op_dest->addr, DATA_BYTE, result);
 	//print_asm_template2();
-	print_asm("sub" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d", op_src->val, op_dest->val, result);
+	print_asm("sub" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d 0x%X", op_src->val, op_dest->val, result, val1);
 }
 #if DATA_BYTE == 2 || DATA_BYTE == 4
 make_instr_helper(si2rm)
