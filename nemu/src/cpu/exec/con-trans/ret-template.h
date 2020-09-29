@@ -15,8 +15,8 @@ make_helper(concat(ret_i_, SUFFIX)){
 	cpu.eip = swaddr_read(reg_l(R_ESP), DATA_BYTE);
 	if(DATA_BYTE == 2) cpu.eip = cpu.eip & 0xfffff;
 	reg_l(R_ESP) += DATA_BYTE;
-	print_asm("ret to 0x%X", cpu.eip);
 	cpu.esp += val;
+	print_asm("ret to 0x%X", cpu.eip);
 	return 1;
 } 
 
