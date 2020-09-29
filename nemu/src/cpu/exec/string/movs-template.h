@@ -16,7 +16,7 @@ make_helper(concat(movs_, SUFFIX)) {
 		print_asm("movs" str(SUFFIX) "si:0x%X, di:0x%X", reg_w(R_SI), reg_w(R_DI));
 	}else{
 		DATA_TYPE val1 = reg_l(R_ESI);
-		swaddr_write(reg_l(R_EDI), DATA_BYTE, swaddr_read(reg_l(R_ESI), 4));
+		swaddr_write(reg_l(R_EDI), DATA_BYTE, swaddr_read(val1, 4));
 		if(cpu.DF == 0){
 			reg_l(R_EDI) += DATA_BYTE;
 			reg_l(R_ESI) += DATA_BYTE;
