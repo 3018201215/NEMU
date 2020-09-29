@@ -4,6 +4,7 @@
 
 static void do_execute() {
 	DATA_TYPE result = op_dest->val - op_src->val;
+	OPERAND_W(op_dest, result);
 	int len = (DATA_BYTE << 3) - 1;
 	cpu.CF = op_dest->val < op_src->val;
 	int a = op_src->val >> len;
@@ -19,7 +20,6 @@ static void do_execute() {
 	if(result == 0){
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
-	OPERAND_W(op_dest, result);
 	//print_asm_template2();
 	print_asm("sub" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d", op_src->val, op_dest->val, result);
 }
