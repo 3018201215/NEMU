@@ -22,7 +22,7 @@ static void do_execute() {
 	}else cpu.ZF = 0;
 	OPERAND_W(op_dest, result);
 	//print_asm_template2();
-	print_asm("sub" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d", op_src->val, val1, op_dest->val);
+	print_asm("sub" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d", op_src->val, val1, result);
 }
 #if DATA_BYTE == 2 || DATA_BYTE == 4
 make_instr_helper(si2rm)
