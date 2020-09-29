@@ -17,7 +17,7 @@ make_helper(concat(ret_i_, SUFFIX)){
 	reg_l(R_ESP) += DATA_BYTE;
 	cpu.esp += val;
 	print_asm("ret $0x%X", val);
-	return 2;
+	return 3;
 } 
 
 #include "cpu/exec/template-end.h"
