@@ -20,6 +20,6 @@ make_helper(lea) {
 	int len = load_addr(eip + 1, &m, op_src);
 	reg_l(m.reg) = op_src->addr;
 
-	print_asm("leal %s,%%%s 0x%X", op_src->str, regsl[m.reg], cpu.eax);
+	print_asm("leal %s,%%%s ax:0x%X bp:0x%X", op_src->str, regsl[m.reg], cpu.eax, cpu.ebp);
 	return 1 + len;
 }
