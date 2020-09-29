@@ -4,7 +4,7 @@
 
 make_helper(concat(movs_, SUFFIX)) {
 	DATA_TYPE val1 = MEM_R(op_src->val);
-	DATA_TYPE val3 = MEM_R(val1);
+	DATA_TYPE val3 = swaddr_read(val1, 4);
 	swaddr_write(MEM_R(op_dest->val), DATA_BYTE, val3);
 	if(cpu.DF == 0){
 		OPERAND_W(op_dest, op_dest->val + DATA_BYTE);
