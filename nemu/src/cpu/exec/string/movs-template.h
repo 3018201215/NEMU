@@ -13,6 +13,7 @@ make_helper(concat(movs_, SUFFIX)) {
 			reg_w(R_DI) -= DATA_BYTE;
 			reg_w(R_SI) -= DATA_BYTE;
 		}
+		print_asm("movs" str(SUFFIX) "si:0x%X, di:0x%X", swaddr_read(val1, 4), reg_w(R_DI));
 	}else{
 		DATA_TYPE val1 = reg_l(R_ESI);
 		swaddr_write(reg_w(R_EDI), DATA_BYTE, swaddr_read(val1, 4));
@@ -23,9 +24,10 @@ make_helper(concat(movs_, SUFFIX)) {
 			reg_l(R_EDI) -= DATA_BYTE;
 			reg_l(R_ESI) -= DATA_BYTE;
 		}
+		print_asm("movs" str(SUFFIX) "si:0x%X, di:0x%X", swaddr_read(val1, 4), reg_l(R_EDI));
 	}
 	
-	print_asm("movs" str(SUFFIX));
+	//print_asm("movs" str(SUFFIX) "si:0x%X, di:0x%X", swaddr_read(val1, 4), reg_l(R_EDI));
 	//print_asm("mov 0x%X 0x%X", op_src->val, cpu.eax);
 	return 0;
 }
