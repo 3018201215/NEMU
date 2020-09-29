@@ -30,7 +30,7 @@ make_helper(rep) {
 			|| ops_decoded.opcode == 0xa7	// cmpsw
 			|| ops_decoded.opcode == 0xae	// scasb
 			|| ops_decoded.opcode == 0xaf)	// scasw
-			&& cpu.ZF == 1) break;
+			&& cpu.ZF == 0) break;
 		}
 		len = 1;
 	}
@@ -55,7 +55,7 @@ make_helper(repnz) {
 				|| ops_decoded.opcode == 0xae	// scasb
 				|| ops_decoded.opcode == 0xaf	// scasw
 			  );
-		if(cpu.ZF == 0) break;
+		if(cpu.ZF == 1) break;
 		/* TODO: Jump out of the while loop if necessary. */
 
 	}
