@@ -3,47 +3,85 @@
 #define instr scas
 
 make_helper(concat(scas_, SUFFIX)) {
+	DATA_TYPE result;
+	int a, b;
+	int len = (DATA_BYTE << 3) - 1;
 	if(ops_decoded.is_operand_size_16){
 			if(DATA_BYTE == 1){
-				REG(R_AL) = swaddr_read(reg_w(R_DI), DATA_BYTE);
+				swaddr_t val = swaddr_read(reg_w(R_DI), DATA_BYTE);
 				if(cpu.DF == 0){
 					reg_w(R_DI) += DATA_BYTE;
 				}else
 					reg_w(R_DI) -= DATA_BYTE;
+				result = reg_b(R_AL) - val;
+				cpu.CF = reg_b(R_AL) < val;
+				b = reg_b(R_AL) >> len;
+				a = val >> len;
 			}else if(DATA_BYTE == 2){
-				swaddr_write(REG(R_AX), DATA_BYTE, swaddr_read(reg_w(R_DI), 4));
+				swaddr_t val =  swaddr_read(reg_w(R_DI), DATA_BYTE);
 				if(cpu.DF == 0){
 					reg_w(R_DI) += DATA_BYTE;
 				}else
 					reg_w(R_DI) -= DATA_BYTE;
+				result = reg_w(R_AX) - val;
+				cpu.CF = reg_w(R_AX) < val;
+				b = reg_w(R_AX) >> len;
+				a = val >> len;
 			}else{
-				swaddr_write(REG(R_EAX), DATA_BYTE, swaddr_read(reg_w(R_DI), 4));
+				swaddr_t val =  swaddr_read(reg_w(R_DI), DATA_BYTE);
 				if(cpu.DF == 0){
 					reg_w(R_DI) += DATA_BYTE;
 				}else
 					reg_w(R_DI) -= DATA_BYTE;
+				result = reg_l(R_EAX) - val;
+				cpu.CF = reg_l(R_EAX) < val;
+				b = reg_l(R_EAX) >> len;
+				a = val >> len;
 			}
 	}else{
 		if(DATA_BYTE == 1){
-				swaddr_write(REG(R_AL), DATA_BYTE, swaddr_read(reg_l(R_EDI), 4));
+				swaddr_t val = swaddr_read(reg_l(R_EDI), DATA_BYTE);
 				if(cpu.DF == 0){
 					reg_l(R_EDI) += DATA_BYTE;
 				}else
 					reg_l(R_EDI) -= DATA_BYTE;
+				result = reg_b(R_AL) - val;
+				cpu.CF = reg_b(R_AL) < val;
+				b = reg_b(R_AL) >> len;
+				a = val >> len;
 			}else if(DATA_BYTE == 2){
-				swaddr_write(REG(R_AX), DATA_BYTE, swaddr_read(reg_l(R_EDI), 4));
+				swaddr_t val =  swaddr_read(reg_l(R_EDI), DATA_BYTE);
 				if(cpu.DF == 0){
 					reg_l(R_EDI) += DATA_BYTE;
 				}else
 					reg_l(R_EDI) -= DATA_BYTE;
+				result = reg_w(R_AX) - val;
+				cpu.CF = reg_w(R_AX) < val;
+				b = reg_w(R_AX) >> len;
+				a = val >> len;
 			}else{
-				swaddr_write(REG(R_EAX), DATA_BYTE, swaddr_read(reg_l(R_EDI), 4));
+				swaddr_t val =  swaddr_read(reg_l(R_EDI), DATA_BYTE);
 				if(cpu.DF == 0){
 					reg_l(R_EDI) += DATA_BYTE;
 				}else
 					reg_l(R_EDI) -= DATA_BYTE;
+				result = reg_l(R_EAX) - val;
+				cpu.CF = reg_l(R_EAX) < val;
+				b = reg_l(R_EAX) >> len;
+				a = val >> len;
 			}
 	}
+	cpu.SF = result >> len;
+	cpu.OF = (a != b && a == cpu.SF);
+	uint32_t s = result;
+	int i;
+	for(i=1; i<8; i++){
+		s ^= result >> i;
+	}
+	cpu.PF = !(s & 1);
+	if(result == 0){
+		cpu.ZF = 1;
+	}else cpu.ZF = 0;
 	print_asm("scas" str(SUFFIX) "0x%X 0x%X",swaddr_read(reg_l(R_EDI), 4),REG(R_AL));
 	//print_asm("mov 0x%X 0x%X", op_src->val, cpu.eax);
 	return 1;
