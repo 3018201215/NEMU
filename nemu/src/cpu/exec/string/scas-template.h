@@ -82,7 +82,7 @@ make_helper(concat(scas_, SUFFIX)) {
 	if(result == 0){
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
-	print_asm("scas" str(SUFFIX) "%d 0x%X %d",swaddr_read(reg_l(R_EDI), DATA_BYTE),REG(R_AL), result);
+	print_asm("scas" str(SUFFIX) "%d 0x%X %d",swaddr_read(reg_l(R_EDI), DATA_BYTE),reg_b(R_AL), result);
 	//print_asm("mov 0x%X 0x%X", op_src->val, cpu.eax);
 	return 1;
 }
