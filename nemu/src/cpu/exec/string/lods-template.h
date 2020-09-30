@@ -5,7 +5,7 @@
 make_helper(concat(lods_, SUFFIX)) {
 	if(ops_decoded.is_operand_size_16){
 			if(DATA_BYTE == 1){
-				swaddr_write(reg_b(R_AL), DATA_BYTE, swaddr_read(reg_w(R_SI), 4));
+				reg_b(R_AL)= swaddr_read(reg_w(R_SI), DATA_BYTE);
 				if(cpu.DF == 0){
 					reg_w(R_SI) += DATA_BYTE;
 				}else
