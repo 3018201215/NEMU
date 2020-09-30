@@ -47,7 +47,7 @@ make_helper(concat(lods_, SUFFIX)) {
 	}
 	print_asm("lods" str(SUFFIX));
 	//print_asm("mov 0x%X 0x%X", op_src->val, cpu.eax);
-	return 0;
+	return 1;
 }
 
 
