@@ -1,6 +1,6 @@
 #include "cpu/exec/template-start.h"
 
-#define instr mov
+#define instr movs
 
 make_helper(concat(movs_, SUFFIX)) {
 	if(ops_decoded.is_operand_size_16){
