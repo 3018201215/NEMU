@@ -45,7 +45,7 @@ make_helper(concat(lods_, SUFFIX)) {
 				}
 			}
 	}
-	print_asm("lods" str(SUFFIX) "0x%X 0x%X",swaddr_read(cpu.esi, 4),REG(R_AL));
+	print_asm("lods" str(SUFFIX) "0x%X 0x%X",swaddr_read(reg_l(R_ESI), 4),REG(R_AL));
 	//print_asm("mov 0x%X 0x%X", op_src->val, cpu.eax);
 	return 1;
 }
