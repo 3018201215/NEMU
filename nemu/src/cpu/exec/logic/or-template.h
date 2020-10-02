@@ -18,7 +18,8 @@ static void do_execute () {
 	for(i = 1; i < 8; i ++)
 		s ^= result >> 1;
 	cpu.PF = !(s & 1);
-	print_asm_template2();
+	print_asm("or" str(SUFFIX) "0x%X", cpu.eax);
+	//print_asm_template2();
 }
 
 make_instr_helper(i2a)
