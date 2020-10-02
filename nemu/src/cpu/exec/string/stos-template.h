@@ -10,7 +10,7 @@ make_helper(concat(stos_, SUFFIX)) {
 			val1 &= 0xff;
 		else if(DATA_BYTE == 2)
 			val1 &= 0xffff;
-		swaddr_write(val, val1, 4);
+		swaddr_write(val, DATA_BYTE, val1);
 		if(cpu.DF == 0){
 			reg_w(R_DI) += DATA_BYTE;
 		}else
@@ -22,7 +22,7 @@ make_helper(concat(stos_, SUFFIX)) {
 			val1 &= 0xff;
 		else if(DATA_BYTE == 2)
 			val1 &= 0xffff;
-		swaddr_write(val, val1, 4);
+		swaddr_write(val, DATA_BYTE, val1);
 		if(cpu.DF == 0){
 			reg_l(R_EDI) += DATA_BYTE;
 		}else
