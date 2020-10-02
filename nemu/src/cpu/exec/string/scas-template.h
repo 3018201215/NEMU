@@ -6,9 +6,10 @@ make_helper(concat(scas_, SUFFIX)) {
 	DATA_TYPE result;
 	int a, b;
 	int len = (DATA_BYTE << 3) - 1;
+	swaddr_t val;
 	DATA_TYPE val1 = REG(R_EAX);
 	if(DATA_BYTE == 2){
-		swaddr_t val = swaddr_read(REG(R_DI), DATA_BYTE);
+		val = swaddr_read(REG(R_DI), DATA_BYTE);
 		result = val1 - val;
 		if(cpu.DF == 0){
 			reg_w(R_DI) += DATA_BYTE;
@@ -17,7 +18,7 @@ make_helper(concat(scas_, SUFFIX)) {
 		a = val >> len;
 		b = val1 >> len;
 	}else{
-		swaddr_t val = swaddr_read(REG(R_EDI), DATA_BYTE);
+		 val = swaddr_read(REG(R_EDI), DATA_BYTE);
 		if(DATA_BYTE == 1){
 			val1 = REG(R_AL);
 		}
@@ -40,7 +41,7 @@ make_helper(concat(scas_, SUFFIX)) {
 	if(result == 0){
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
-	print_asm("scas" str(SUFFIX) " 0x%X 0x%X %d",swaddr_read(reg_l(R_EDI), DATA_BYTE),val1, result);
+	print_asm("scas" str(SUFFIX) " 0x%X 0x%X %d", val,val1, result);
 	//print_asm("mov 0x%X 0x%X", op_src->val, cpu.eax);
 	return 1;
 }
