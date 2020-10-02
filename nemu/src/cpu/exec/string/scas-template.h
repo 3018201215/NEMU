@@ -6,81 +6,16 @@ make_helper(concat(scas_, SUFFIX)) {
 	DATA_TYPE result;
 	int a, b;
 	int len = (DATA_BYTE << 3) - 1;
-	// if(ops_decoded.is_operand_size_16){
-	// 		if(DATA_BYTE == 1){
-	// 			swaddr_t val = swaddr_read(reg_w(R_DI), DATA_BYTE);
-	// 			if(cpu.DF == 0){
-	// 				reg_w(R_DI) += DATA_BYTE;
-	// 			}else
-	// 				reg_w(R_DI) -= DATA_BYTE;
-	// 			result = reg_b(R_AL) - val;
-	// 			cpu.CF = reg_b(R_AL) < val;
-	// 			b = reg_b(R_AL) >> len;
-	// 			a = val >> len;
-	// 		}else if(DATA_BYTE == 2){
-	// 			swaddr_t val =  swaddr_read(reg_w(R_DI), DATA_BYTE);
-	// 			if(cpu.DF == 0){
-	// 				reg_w(R_DI) += DATA_BYTE;
-	// 			}else
-	// 				reg_w(R_DI) -= DATA_BYTE;
-	// 			result = reg_w(R_AX) - val;
-	// 			cpu.CF = reg_w(R_AX) < val;
-	// 			b = reg_w(R_AX) >> len;
-	// 			a = val >> len;
-	// 		}else{
-	// 			swaddr_t val =  swaddr_read(reg_w(R_DI), DATA_BYTE);
-	// 			if(cpu.DF == 0){
-	// 				reg_w(R_DI) += DATA_BYTE;
-	// 			}else
-	// 				reg_w(R_DI) -= DATA_BYTE;
-	// 			result = reg_l(R_EAX) - val;
-	// 			cpu.CF = reg_l(R_EAX) < val;
-	// 			b = reg_l(R_EAX) >> len;
-	// 			a = val >> len;
-	// 		}
-	// }else{
-	// 	if(DATA_BYTE == 1){
-	// 			swaddr_t val = swaddr_read(reg_l(R_EDI), DATA_BYTE);
-	// 			if(cpu.DF == 0){
-	// 				reg_l(R_EDI) += DATA_BYTE;
-	// 			}else
-	// 				reg_l(R_EDI) -= DATA_BYTE;
-	// 			result = reg_b(R_AL) - val;
-	// 			cpu.CF = reg_b(R_AL) < val;
-	// 			b = reg_b(R_AL) >> len;
-	// 			a = val >> len;
-	// 		}else if(DATA_BYTE == 2){
-	// 			swaddr_t val =  swaddr_read(reg_l(R_EDI), DATA_BYTE);
-	// 			if(cpu.DF == 0){
-	// 				reg_l(R_EDI) += DATA_BYTE;
-	// 			}else
-	// 				reg_l(R_EDI) -= DATA_BYTE;
-	// 			result = reg_w(R_AX) - val;
-	// 			cpu.CF = reg_w(R_AX) < val;
-	// 			b = reg_w(R_AX) >> len;
-	// 			a = val >> len;
-	// 		}else{
-	// 			swaddr_t val =  swaddr_read(reg_l(R_EDI), DATA_BYTE);
-	// 			if(cpu.DF == 0){
-	// 				reg_l(R_EDI) += DATA_BYTE;
-	// 			}else
-	// 				reg_l(R_EDI) -= DATA_BYTE;
-	// 			result = reg_l(R_EAX) - val;
-	// 			cpu.CF = reg_l(R_EAX) < val;
-	// 			b = reg_l(R_EAX) >> len;
-	// 			a = val >> len;
-	// 		}
-	// }
 	DATA_TYPE val1 = REG(R_EAX);
 	if(DATA_BYTE == 2){
 		swaddr_t val = swaddr_read(REG(R_DI), DATA_BYTE);
-		result = REG(R_AX) - val;
+		result = val1 - val;
 		if(cpu.DF == 0){
 			reg_w(R_DI) += DATA_BYTE;
 		}else
 			reg_w(R_DI) -= DATA_BYTE;
 		a = val >> len;
-		b = REG(R_AX) >> len;
+		b = val1 >> len;
 	}else{
 		swaddr_t val = swaddr_read(REG(R_EDI), DATA_BYTE);
 		if(DATA_BYTE == 1){
