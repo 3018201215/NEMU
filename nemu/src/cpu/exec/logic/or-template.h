@@ -4,6 +4,7 @@
 
 static void do_execute () {
 	DATA_TYPE result = op_dest->val | op_src->val;
+	DATA_TYPE val = op_dest->val;
 	OPERAND_W(op_dest, result);
 
 	/* TODO: Update EFLAGS. */
@@ -18,7 +19,7 @@ static void do_execute () {
 	for(i = 1; i < 8; i ++)
 		s ^= result >> 1;
 	cpu.PF = !(s & 1);
-	print_asm("or" str(SUFFIX) "0x%X", cpu.eax);
+	print_asm("or" str(SUFFIX) " old: 0x%X new: 0x%X eax: 0x%X", val, result, cpu.eax);
 	//print_asm_template2();
 }
 
