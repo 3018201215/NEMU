@@ -9,7 +9,7 @@ make_helper(concat(scas_, SUFFIX)) {
 	swaddr_t val;
 	DATA_TYPE val1 = REG(R_EAX);
 	if(DATA_BYTE == 2){
-		val = swaddr_read(REG(R_DI), DATA_BYTE);
+		val = swaddr_read(reg_w(R_DI), DATA_BYTE);
 		result = val1 - val;
 		if(cpu.DF == 0){
 			reg_w(R_DI) += DATA_BYTE;
@@ -18,7 +18,7 @@ make_helper(concat(scas_, SUFFIX)) {
 		a = val >> len;
 		b = val1 >> len;
 	}else{
-		 val = swaddr_read(REG(R_EDI), DATA_BYTE);
+		val = swaddr_read(reg_l(R_EDI), DATA_BYTE);
 		if(DATA_BYTE == 1){
 			val1 = REG(R_AL);
 		}
