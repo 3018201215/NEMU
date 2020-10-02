@@ -15,13 +15,9 @@ make_helper(concat(scas_, SUFFIX)) {
 			reg_w(R_DI) += DATA_BYTE;
 		}else
 			reg_w(R_DI) -= DATA_BYTE;
-		a = val >> len;
-		b = val1 >> len;
+
 	}else{
 		val = swaddr_read(reg_l(R_EDI), DATA_BYTE);
-		if(DATA_BYTE == 1){
-			val1 = REG(R_AL);
-		}
 		result = val1 - val;
 		if(cpu.DF == 0){
 			reg_l(R_EDI) += DATA_BYTE;
@@ -30,6 +26,8 @@ make_helper(concat(scas_, SUFFIX)) {
 		a = val1 >> len;
 		b = val >> len;
 	}
+	a = val >> len;
+	b = val1 >> len;
 	cpu.SF = result >> len;
 	cpu.OF = (a != b && a == cpu.SF);
 	uint32_t s = result;
