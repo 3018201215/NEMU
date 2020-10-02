@@ -84,7 +84,7 @@ make_helper(concat(scas_, SUFFIX)) {
 		swaddr_t val = swaddr_read(REG(R_EDI), DATA_BYTE);
 		DATA_TYPE val1 = REG(R_EAX);
 		if(DATA_BYTE == 1){
-			val1 = val1 & 0xff;
+			val1 = REG(R_AL);
 		}
 		result = val1 - val;
 		if(cpu.DF == 0){
