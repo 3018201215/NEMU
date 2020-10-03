@@ -14,8 +14,7 @@ make_helper(concat(movs_, SUFFIX)) {
 			reg_w(R_SI) -= DATA_BYTE;
 		}
 	}else{
-		DATA_TYPE val1 = reg_l(R_ESI);
-		swaddr_write(reg_l(R_EDI), 4, swaddr_read(val1, 4));
+		swaddr_write(reg_l(R_EDI), 4, swaddr_read(reg_l(R_ESI), 4));
 		if(cpu.DF == 0){
 			reg_l(R_EDI) += DATA_BYTE;
 			reg_l(R_ESI) += DATA_BYTE;
