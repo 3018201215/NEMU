@@ -26,6 +26,7 @@ make_helper(concat(scas_, SUFFIX)) {
 	}
 	a = val >> len;
 	b = val1 >> len;
+	cpu.CF = val1 < val;
 	cpu.SF = result >> len;
 	cpu.OF = (a != b && a == cpu.SF);
 	uint32_t s = result;
