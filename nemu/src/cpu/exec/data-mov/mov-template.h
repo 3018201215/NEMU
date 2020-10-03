@@ -5,7 +5,7 @@
 static void do_execute() {
 	OPERAND_W(op_dest, op_src->val);
 	//print_asm_template2();
-	print_asm("mov 0x%X", op_src->val);
+	print_asm("mov 0x%X si:0x%X di:0x%X", op_src->val,REG(R_ESI),REG(R_EDI));
 }
 
 make_instr_helper(i2r)
