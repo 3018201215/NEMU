@@ -3,18 +3,16 @@
 #define instr stos
 
 make_helper(concat(stos_, SUFFIX)) {
-	if(DATA_BYTE == 2){
-		swaddr_t val = swaddr_read(reg_w(R_DI), DATA_BYTE);
-		DATA_TYPE val1 = REG(R_EAX);
-		swaddr_write(val, DATA_BYTE, val1);
+	if(ops_decoded.is_operand_size_16){
+		DATA_TYPE val1 = reg_w(R_AX);
+		swaddr_write(reg_w(R_DI), DATA_BYTE, val1);
 		if(cpu.DF == 0){
 			reg_w(R_DI) += DATA_BYTE;
 		}else
 			reg_w(R_DI) -= DATA_BYTE;
 	}else{
-		swaddr_t val = swaddr_read(reg_l(R_EDI), DATA_BYTE);
 		DATA_TYPE val1 = REG(R_EAX);
-		swaddr_write(val, DATA_BYTE, val1);
+		swaddr_write(reg_l(R_EDI), DATA_BYTE, val1);
 		if(cpu.DF == 0){
 			reg_l(R_EDI) += DATA_BYTE;
 		}else

@@ -23,8 +23,6 @@ make_helper(concat(scas_, SUFFIX)) {
 			reg_l(R_EDI) += DATA_BYTE;
 		}else
 			reg_l(R_EDI) -= DATA_BYTE;
-		a = val1 >> len;
-		b = val >> len;
 	}
 	a = val >> len;
 	b = val1 >> len;
