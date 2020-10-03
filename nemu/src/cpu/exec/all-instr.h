@@ -52,3 +52,4 @@
 #include "con-trans/jl.h"
 #include "con-trans/jge.h"
 #include "con-trans/ja.h"
+#include "con-trans/js.h"
