@@ -6,7 +6,7 @@ make_helper(concat(ret_n_, SUFFIX)){
 	cpu.eip = swaddr_read(reg_l(R_ESP), DATA_BYTE);
 	MEM_W(reg_l(R_ESP),0);
 	reg_l(R_ESP) += DATA_BYTE;
-	print_asm("ret to 0x%X sp:0x%X", cpu.eip,REG(R_ESP));
+	print_asm("ret to 0x%X ", cpu.eip);
 	return 1;
 }
 
@@ -18,7 +18,7 @@ make_helper(concat(ret_i_, SUFFIX)){
 	int i;
 	for(i = 0; i < val; i += DATA_BYTE) MEM_W(reg_l(R_ESP)+i, 0);
 	cpu.esp += val;
-	print_asm("ret $0x%X sp:0x%X", val,REG(R_ESP));
+	print_asm("ret $0x%X", val);
 	return 1;
 } 
 
