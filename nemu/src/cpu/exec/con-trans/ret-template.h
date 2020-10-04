@@ -4,7 +4,6 @@
 
 make_helper(concat(ret_n_, SUFFIX)){
 	cpu.eip = swaddr_read(reg_l(R_ESP), DATA_BYTE);
-	if(DATA_BYTE == 2) cpu.eip = cpu.eip & 0xfffff;
 	MEM_W(reg_l(R_ESP),0);
 	reg_l(R_ESP) += DATA_BYTE;
 	print_asm("ret to 0x%X sp:0x%X", cpu.eip,REG(R_ESP));
