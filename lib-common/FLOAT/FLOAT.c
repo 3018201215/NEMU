@@ -59,14 +59,17 @@ FLOAT f2F(float a) {
 	 * stack. How do you retrieve it to another variable without
 	 * performing arithmetic operations on it directly?
 	 */
-	int b = *(int*) &a;
+	int b = *(int*)&a;
 	int sign = b >> 31;
 	int exp = (b >> 23) & 0xff;
 	FLOAT k = b & 0x7fffff;
 	if(exp != 0) k += 1 << 23;
-	exp -= 150;
-	if(exp < -16) k >>= -16 - exp;
-	if(exp > -16) k <<= 16 + exp;
+	if(exp == 255) return sign ? -0x7fffffff : 0x7fffffff;
+	if(exp == 0) return 0;
+	k |= 1 << 23;
+	exp -= 134;
+	if(exp < 0) last >>= -exp;
+	if(exp > 0) last <<= exp;
 	return sign == 0 ? k : -k;
 }
 
