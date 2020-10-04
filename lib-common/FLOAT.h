@@ -6,9 +6,7 @@
 typedef int FLOAT;
 
 static inline int F2int(FLOAT a) {
-	a = a & 0xffff0000; 
-	int b = a >> 16;
-	return b;
+	return (a & 0xffff0000) >> 16;
 }
 
 static inline FLOAT int2F(int a) {
@@ -29,6 +27,7 @@ FLOAT F_div_F(FLOAT, FLOAT);
 FLOAT Fabs(FLOAT);
 FLOAT sqrt(FLOAT);
 FLOAT pow(FLOAT, FLOAT);
+float toFloat(FLOAT s);
 
 // used when calling printf/sprintf to format a FLOAT argument
 #define FLOAT_ARG(f) (long long)f
