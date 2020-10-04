@@ -60,10 +60,9 @@ FLOAT f2F(float a) {
 	 * performing arithmetic operations on it directly?
 	 */
 	int b = *(int*)&a;
-	int sign = b >> 31;
+	int sign = b & 0x80000000;
 	int exp = (b >> 23) & 0xff;
 	FLOAT k = b & 0x7fffff;
-	if(exp != 0) k += 1 << 23;
 	if(exp == 255) return sign ? -0x7fffffff : 0x7fffffff;
 	if(exp == 0) return 0;
 	k |= 1 << 23;

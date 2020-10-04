@@ -12,10 +12,7 @@ static inline int F2int(FLOAT a) {
 }
 
 static inline FLOAT int2F(int a) {
-	FLOAT b ;
-	if(a >= 0) b = a << 16;
-	else b = -((-a) << 16);
-	return b;
+	return a << 16;
 }
 
 static inline FLOAT F_mul_int(FLOAT a, int b) {
