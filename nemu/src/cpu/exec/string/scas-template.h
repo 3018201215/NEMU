@@ -34,8 +34,7 @@ make_helper(concat(scas_, SUFFIX)) {
 	result ^= (result>>2);
 	result ^= (result>>1);
 	cpu.PF = !(result & 1);
-	//print_asm("scas" str(SUFFIX) " 0x%X 0x%X %d", val,val1, result);
-	print_asm("mov 0x%X 0x%X", op_src->val, cpu.eax);
+	print_asm("scas" str(SUFFIX) " 0x%X 0x%X %d", val,val1, result);
 	return 1;
 }
 
