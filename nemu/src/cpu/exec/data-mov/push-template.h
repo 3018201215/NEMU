@@ -10,7 +10,10 @@ static void do_execute(){
 	//print_asm("push" str(SUFFIX) " sp:0x%X", REG(R_ESP));
 }
 
+#if DATA_BYTE == 2 || DATA_BYTE == 4
 make_instr_helper(r)
 make_instr_helper(rm)
+#endif
+
 make_instr_helper(i)
 #include "cpu/exec/template-end.h"
