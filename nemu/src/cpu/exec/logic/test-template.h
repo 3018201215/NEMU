@@ -15,8 +15,8 @@ static void do_execute(){
 	result ^= (result>>2);
 	result ^= (result>>1);
 	cpu.PF = !(result & 1);
-	print_asm("test" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d, eflags: 0x%X", val1, val2, result, cpu.EFLAGS);
-	//print_asm_template2();
+	//print_asm("test" str(SUFFIX) " value1: 0x%X, value2: 0x%X, result: %d, eflags: 0x%X", val1, val2, result, cpu.EFLAGS);
+	print_asm_template2();
 }
 make_instr_helper(i2a)
 make_instr_helper(i2rm)
