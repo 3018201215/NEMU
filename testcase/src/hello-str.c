@@ -5,8 +5,8 @@
 char buf[128];
 
 int main() {
-	sprintf(buf, "%s", "a!\n");
-	nemu_assert(strcmp(buf, "a!\n") == 0);
+	sprintf(buf, "%s", "b!\n");
+	nemu_assert(strcmp(buf, "b!\n") == 0);
 
 //	sprintf(buf, "%d + %d = %d\n", 1, 1, 2);
 //	nemu_assert(strcmp(buf, "1 + 1 = 2\n") == 0);
