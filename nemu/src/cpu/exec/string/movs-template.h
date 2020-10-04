@@ -24,7 +24,7 @@ make_helper(concat(movs_, SUFFIX)) {
 		}
 	}
 	
-	print_asm("movs " str(SUFFIX) "si:0x%X, di:0x%X", REG(R_ESI), REG(R_EDI));
+	print_asm("movs " str(SUFFIX) "si:0x%X, di:0x%X", MEM_R(REG(R_ESI)), MEM_R(REG(R_EDI)));
 	//print_asm("movs");
 	return 1;
 }
