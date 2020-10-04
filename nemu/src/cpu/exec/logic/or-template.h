@@ -13,11 +13,10 @@ static void do_execute () {
 	int len = (DATA_BYTE << 3) - 1;
 	cpu.SF = result >> len;
 	cpu.ZF = !result;
-	DATA_TYPE s = result;
-	int i;
-	for(i = 1; i < 8; i ++)
-		s ^= result >> 1;
-	cpu.PF = !(s & 1);
+	result ^= (result>>4);
+	result ^= (result>>2);
+	result ^= (result>>1);
+	cpu.PF = !(result & 1);
 	//print_asm("or" str(SUFFIX) " old: 0x%X new: 0x%X eax: 0x%X", val, result, cpu.eax);
 	print_asm_template2();
 }

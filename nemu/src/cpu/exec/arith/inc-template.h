@@ -11,13 +11,11 @@ static void do_execute () {
 	int len = (DATA_BYTE << 3) - 1;
 	cpu.OF = result < op_src->val;
 	cpu.SF = result >> len;
-	uint32_t s = result;
-	int i;
-	for(i=1; i<8; i++){
-		s ^= result >> i;
-	}
-	cpu.PF = !(s & 1);
 	cpu.CF = cpu.ZF = !result;
+	result ^= (result>>4);
+	result ^= (result>>2);
+	result ^= (result>>1);
+	cpu.PF = !(result & 1);
 	print_asm_template1();
 }
 

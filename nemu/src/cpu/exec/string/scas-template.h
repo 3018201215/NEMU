@@ -29,17 +29,13 @@ make_helper(concat(scas_, SUFFIX)) {
 	cpu.CF = val1 < val;
 	cpu.SF = result >> len;
 	cpu.OF = (a != b && a == cpu.SF);
-	uint32_t s = result;
-	int i;
-	for(i=1; i<8; i++){
-		s ^= result >> i;
-	}
-	cpu.PF = !(s & 1);
-	if(result == 0){
-		cpu.ZF = 1;
-	}else cpu.ZF = 0;
-	print_asm("scas" str(SUFFIX) " 0x%X 0x%X %d", val,val1, result);
-	//print_asm("mov 0x%X 0x%X", op_src->val, cpu.eax);
+	cpu.ZF = !result;
+	result ^= (result>>4);
+	result ^= (result>>2);
+	result ^= (result>>1);
+	cpu.PF = !(result & 1);
+	//print_asm("scas" str(SUFFIX) " 0x%X 0x%X %d", val,val1, result);
+	print_asm("mov 0x%X 0x%X", op_src->val, cpu.eax);
 	return 1;
 }
 
