@@ -1,4 +1,4 @@
-#include "FLOAT.h"
+#include "../FLOAT.h"
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
 	long long c = (long long)a * (long long)b;
@@ -23,8 +23,8 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
 	 * It is OK not to use the template above, but you should figure
 	 * out another way to perform the division.
 	 */
-	FLOAT d = cpu.edx;
-	asm volatile ("idiv %2" : "=a"(a), "=d"(d) : "r"(b), "a"(a), "d"(d));
+	FLOAT d ;
+	asm volatile ("idiv %2" : "=a"(a), "=d"(d) : "r"(b), "a"(a), "d"(a%b));
 	return a+d;
 }
 
@@ -56,27 +56,27 @@ FLOAT Fabs(FLOAT a) {
 
 /* Functions below are already implemented */
 
-FLOAT sqrt(FLOAT x) {
-	FLOAT dt, t = int2F(2);
+// FLOAT sqrt(FLOAT x) {
+// 	FLOAT dt, t = int2F(2);
 
-	do {
-		dt = F_div_int((F_div_F(x, t) - t), 2);
-		t += dt;
-	} while(Fabs(dt) > f2F(1e-4));
+// 	do {
+// 		dt = F_div_int((F_div_F(x, t) - t), 2);
+// 		t += dt;
+// 	} while(Fabs(dt) > f2F(1e-4));
 
-	return t;
-}
+// 	return t;
+// }
 
-FLOAT pow(FLOAT x, FLOAT y) {
-	/* we only compute x^0.333 */
-	FLOAT t2, dt, t = int2F(2);
+// FLOAT pow(FLOAT x, FLOAT y) {
+// 	/* we only compute x^0.333 */
+// 	FLOAT t2, dt, t = int2F(2);
 
-	do {
-		t2 = F_mul_F(t, t);
-		dt = (F_div_F(x, t2) - t) / 3;
-		t += dt;
-	} while(Fabs(dt) > f2F(1e-4));
+// 	do {
+// 		t2 = F_mul_F(t, t);
+// 		dt = (F_div_F(x, t2) - t) / 3;
+// 		t += dt;
+// 	} while(Fabs(dt) > f2F(1e-4));
 
-	return t;
-}
+// 	return t;
+// }
 

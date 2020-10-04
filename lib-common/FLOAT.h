@@ -12,8 +12,9 @@ static inline int F2int(FLOAT a) {
 }
 
 static inline FLOAT int2F(int a) {
-	if(a >= 0) FLOAT b = a << 16;
-	else FLOAT b = -((-a) << 16;
+	FLOAT b ;
+	if(a >= 0) b = a << 16;
+	else b = -((-a) << 16);
 	return b;
 }
 
@@ -29,8 +30,8 @@ FLOAT f2F(float);
 FLOAT F_mul_F(FLOAT, FLOAT);
 FLOAT F_div_F(FLOAT, FLOAT);
 FLOAT Fabs(FLOAT);
-FLOAT sqrt(FLOAT);
-FLOAT pow(FLOAT, FLOAT);
+// FLOAT sqrt(FLOAT);
+// FLOAT pow(FLOAT, FLOAT);
 
 // used when calling printf/sprintf to format a FLOAT argument
 #define FLOAT_ARG(f) (long long)f
