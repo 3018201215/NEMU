@@ -25,7 +25,7 @@ make_helper(concat(movs_, SUFFIX)) {
 	}
 	
 	//print_asm("movs" str(SUFFIX));
-	print_asm("movs si:0x%X de:0x%X", REG(R_ESI), REG(R_EDI));
+	print_asm("movs");
 	return 1;
 }
 

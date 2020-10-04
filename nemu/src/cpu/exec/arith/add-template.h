@@ -9,7 +9,7 @@ static void do_execute(){
 	int a = op_src->val >> len;
 	int b = op_dest->val >> len;
 	cpu.SF = result >> len;
-	cpu.OF = (a == b && a != cpu.SF);
+	cpu.OF = (a == b && b != cpu.SF);
 	uint32_t s = result;
 	int i;
 	for(i=1; i<8; i++){
