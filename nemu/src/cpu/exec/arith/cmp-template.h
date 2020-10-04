@@ -11,7 +11,7 @@ static void do_execute(){
 	cpu.SF = result >> len;
 	int a = val1 >> len;
 	int b = val2 >> len;
-	cpu.OF = (a != b && a == cpu.SF);
+	cpu.OF = (a != b && b != cpu.SF);
 	uint32_t s = result;
 	int i;
 	for(i=1; i<8; i++){
