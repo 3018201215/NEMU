@@ -43,10 +43,10 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
 		res <<= 1;
 		if(a >= b){
 			a -= b;
-			res ++
+			res ++;
 		}
 	}
-	return res*sign
+	return res*sign;
 }
 
 FLOAT f2F(float a) {
