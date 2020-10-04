@@ -6,7 +6,6 @@ static void do_execute() {
 	if(op_src->size == 1 && op_dest->size != 1)
 		op_src->val = (int8_t)op_src->val;
 	DATA_TYPE result = op_dest->val - (op_src->val + cpu.CF);
-	DATA_TYPE val = op_dest->val;
 	int len = (DATA_BYTE << 3) - 1;
 	cpu.CF = op_dest->val < op_src->val;
 	int a = op_src->val >> len;
@@ -23,8 +22,8 @@ static void do_execute() {
 		cpu.ZF = 1;
 	}else cpu.ZF = 0;
 	OPERAND_W(op_dest, result);
-	print_asm("sbb" str(SUFFIX) " old: 0x%X new: 0x%X eax:0x%X", val, result, cpu.eax);
-	//print_asm_template2();
+	//print_asm("sbb" str(SUFFIX) " old: 0x%X new: 0x%X eax:0x%X", val, result, cpu.eax);
+	print_asm_template2();
 }
 #if DATA_BYTE == 2 || DATA_BYTE == 4
 make_instr_helper(si2rm)
