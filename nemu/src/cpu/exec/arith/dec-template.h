@@ -10,9 +10,10 @@ static void do_execute () {
 	int len = (DATA_BYTE << 3) - 1;
 	cpu.CF = op_src->val < 1;
 	int a = op_src->val >> len;
+	int b = 0;
 	cpu.ZF = !result;
 	cpu.SF = result >> len;
-	cpu.OF = (a != 0 && 0 == cpu.SF);
+	cpu.OF = (a != b && b == cpu.SF);
 	DATA_TYPE s = result;
 	int i;	
 	for(i=1; i<8; i++){
