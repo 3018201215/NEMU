@@ -3,6 +3,8 @@
 FLOAT_O := $(FLOAT:.a=.o)
 FLOAT_VFPRINTF_O := $(dir $(FLOAT))FLOAT_vfprintf.o
 
+FLOAT_CFLAGS := -c -m32 -msoft-float -mno-sse -fno-builtin -fno-stack-protector
+
 FLOAT_A_OBJ := $(FLOAT_O) $(FLOAT_VFPRINTF_O)
 
 $(FLOAT): $(FLOAT_A_OBJ)
@@ -10,7 +12,9 @@ $(FLOAT): $(FLOAT_A_OBJ)
 
 # TODO: complete the following rules
 
-$(FLOAT_O):
+$(FLOAT_O): % :$(LIB_COMMON_DIR)/FLOAT/FLOAT.c
+	@mkdir -p obj/$(LIB_COMMON_DIR)
+	$(call make_command, $(CC), $(FLOAT_CFAGS), cc $<, $^)
 
 $(FLOAT_VFPRINTF_O):
 
