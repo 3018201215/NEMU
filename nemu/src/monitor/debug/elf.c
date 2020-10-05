@@ -81,3 +81,15 @@ void load_elf_tables(int argc, char *argv[]) {
 	fclose(fp);
 }
 
+char* getstrtab(){
+	return strtab;
+}
+
+
+Elf32_Sym* getsymtab(){
+	return symtab;
+}
+
+int getnr_symtab_entry(){
+	return nr_symtab_entry;
+}

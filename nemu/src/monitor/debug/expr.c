@@ -6,6 +6,8 @@
 #include <sys/types.h>
 #include <regex.h>
 
+#define max_string_long 32
+
 enum {
 	NOTYPE = 256, EQ, AND, OR, REG, NO, NOE, NUM, HENUM, P, M, VAL
 
@@ -35,6 +37,7 @@ static struct rule {
 	{"\\|\\|", OR},
 	{"\\&\\&", AND},
 	{"\\$[a-zA-Z]+", REG},
+	{"\\[a-zA-Z_0-9]+", VAL},
 	{"!", NO},
 	{"==", EQ}						// equal
 };
@@ -107,6 +110,13 @@ static bool make_token(char *e) {
 						break;
 					}
 					case HENUM: {
+						tokens[nr_token].type = rules[i].token_type;
+						strncpy(tokens[nr_token].str , substr_start , substr_len);
+						tokens[nr_token].str[substr_len] = '\0';
+						nr_token ++;
+						break;
+					}
+					case VAL: {
 						tokens[nr_token].type = rules[i].token_type;
 						strncpy(tokens[nr_token].str , substr_start , substr_len);
 						tokens[nr_token].str[substr_len] = '\0';
@@ -190,6 +200,20 @@ uint32_t eval(int p, int q){
 				}
 				break;
 			}
+			// case VAL: {
+			// 	int i;
+			// 	for(i = 0; i < nr_symtab_entry; i ++){
+			// 		if(symtab[i].st_info & 0xf == STT_OBJECT){
+			// 			char tmp[max_string_long];
+			// 			int tmplen = symtab[i+1].st_name - symtab[i].st_name - 1;
+			// 			strncpy(tmp, strtab+symtab[i].st_name, tmplen);
+			// 			tmp[tmplen] = '\0';
+			// 			if(strcmp(tmp, tokens[p].str) == 0){
+			// 				a = symtab[i].st_value;
+			// 			}
+			// 		}
+			// 	}
+			// }
 		}
 		return a;
 	}else if(check_parentheses(p , q) == 1){
