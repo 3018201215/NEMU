@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <regex.h>
 
-#define max_string_long 32
+
 
 enum {
 	NOTYPE = 256, EQ, AND, OR, REG, NO, NOE, NUM, HENUM, P, M, VAL
@@ -146,6 +146,7 @@ static bool make_token(char *e) {
 uint32_t eval(int p, int q);
 int check_parentheses(int p, int q);
 int match(int p,int q);
+uint32_t getvalue(char *s, bool *suc);
 
 uint32_t expr(char *e, bool *success) {
 	if(!make_token(e)) {
@@ -200,20 +201,12 @@ uint32_t eval(int p, int q){
 				}
 				break;
 			}
-			// case VAL: {
-			// 	int i;
-			// 	for(i = 0; i < nr_symtab_entry; i ++){
-			// 		if(symtab[i].st_info & 0xf == STT_OBJECT){
-			// 			char tmp[max_string_long];
-			// 			int tmplen = symtab[i+1].st_name - symtab[i].st_name - 1;
-			// 			strncpy(tmp, strtab+symtab[i].st_name, tmplen);
-			// 			tmp[tmplen] = '\0';
-			// 			if(strcmp(tmp, tokens[p].str) == 0){
-			// 				a = symtab[i].st_value;
-			// 			}
-			// 		}
-			// 	}
-			// }
+			case VAL: {
+				bool suc;
+				a = getvalue(tokens[p].str, &suc);
+				if(!suc) a = -1;
+			}
+			default: assert(0);
 		}
 		return a;
 	}else if(check_parentheses(p , q) == 1){
