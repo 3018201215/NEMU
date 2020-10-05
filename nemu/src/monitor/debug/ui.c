@@ -10,6 +10,12 @@
 void cpu_exec(uint32_t);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
+typedef struct {
+	swaddr_t prev_ebp;
+	swaddr_t ret_addr;
+	uint32_t args[4];
+}StackFrame;
+
 char* rl_gets() {
 	static char *line_read = NULL;
 
@@ -89,6 +95,33 @@ static int cmd_d(char *args){
 	return 0;
 }
 
+void getfunc(swaddr_t addr, char *s);
+
+static int cmd_bt(char *args){
+	StackFrame s;
+	swaddr_t addr = reg_l(R_EBP);
+	s.ret_addr = cpu.eip;
+	char ss[32];
+	int cnt = 0;
+	while(addr){
+		getfunc(s.ret_addr, ss);
+		if(ss[0] == '\0') break;
+		printf("NO:%d 0x%X", cnt++, s.ret_addr);
+		printf("%s (", ss);
+		int i;
+		for(i = 0; i < 4; i++){
+			s.args[i] = swaddr_read(addr+8+4*i, 4);
+			printf("%d", s.args[i]);
+			printf(" %c",i == 3 ? ')' : ',');
+		}
+		s.ret_addr = swaddr_read(addr+4, 4);
+		s.prev_ebp = swaddr_read(addr, 4);
+		addr = s.prev_ebp;
+		printf("\n"); 
+	}
+	return 0;
+}
+
 static int cmd_w(char *args){
 	if(args == NULL) assert(0);
 	WP* p = new_wp(args);
@@ -114,6 +147,7 @@ static struct {
 	{ "p", "Calculate the value of the expression", cmd_p},
 	{ "d", "Delete a watchpoint through it's NO", cmd_d},
 	{ "w", "Set up a watchpoint", cmd_w},
+	{ "bt", "Print the part of the stackframe", cmd_bt},
 	/* TODO: Add more commands */
 
 };
