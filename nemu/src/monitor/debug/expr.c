@@ -205,6 +205,7 @@ uint32_t eval(int p, int q){
 				bool suc;
 				a = getvalue(tokens[p].str, &suc);
 				if(!suc) a = -1;
+				break;
 			}
 			default: assert(0);
 		}
