@@ -62,6 +62,7 @@ make_helper(concat(scas_, SUFFIX)) {
 	result ^= (result >> 4);
 	result ^= (result >> 2);
 	result ^= (result >> 1);
+	cpu.PF = !(result & 1);	
 	print_asm("scas");
 	return 1;
 }
