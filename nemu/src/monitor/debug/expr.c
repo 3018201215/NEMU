@@ -37,7 +37,7 @@ static struct rule {
 	{"\\|\\|", OR},
 	{"\\&\\&", AND},
 	{"\\$[a-zA-Z]+", REG},
-	{"\\[a-zA-Z_0-9]+", VAL},
+	{"\\b[a-zA-Z_0-9]+", VAL},
 	{"!", NO},
 	{"==", EQ}						// equal
 };
