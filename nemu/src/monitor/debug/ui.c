@@ -106,13 +106,13 @@ static int cmd_bt(char *args){
 	while(addr){
 		getfunc(s.ret_addr, ss);
 		if(ss[0] == '\0') break;
-		printf("NO:%d addr:0x%X", cnt++, s.ret_addr);
+		printf("NO:%d addr:0x%X ", cnt++, s.ret_addr);
 		printf("%s (", ss);
 		int i;
 		for(i = 0; i < 4; i++){
 			s.args[i] = swaddr_read(addr+8+4*i, 4);
-			printf(" %d", s.args[i]);
-			printf(" %c",i == 3 ? ')' : ',');
+			printf("%d", s.args[i]);
+			printf("%c ",i == 3 ? ')' : ',');
 		}
 		s.ret_addr = swaddr_read(addr+4, 4);
 		s.prev_ebp = swaddr_read(addr, 4);
