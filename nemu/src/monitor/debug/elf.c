@@ -37,6 +37,7 @@ void getfunc(swaddr_t addr, char *s){
 	s[0] = '\0';
 	return ;
 }
+
 void load_elf_tables(int argc, char *argv[]) {
 	int ret;
 	Assert(argc == 2, "run NEMU with format 'nemu [program]'");
