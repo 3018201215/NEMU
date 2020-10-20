@@ -1,142 +1,118 @@
 #include "common.h"
-#include "burst.h"
 #include "memory/cache.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include "burst.h"
 
-void ddr3read(hwaddr_t addr, void *data);
-void ddr3write(hwaddr_t addr, void *data, uint8_t *mask);
-void dram_write(hwaddr_t addr, size_t len, uint32_t data);
+void dram_write(hwaddr_t, size_t, uint32_t);
+uint32_t dram_read(hwaddr_t, size_t);
+void ddr3_read_public(hwaddr_t, void* );
+void ddr3_write_public(hwaddr_t, void* , uint8_t* );
 
-void cache_init() {
+void init_cache(){
 	int i;
-	for(i=0;i<CACHE_WAY_SIZE*CACHE_SET_SIZE;i++) {
-		cache[i].valid = false;	
+	for(i = 0; i < Cache_size / Cache_block_size; i ++){
+		cache[i].valid_tag = 0;
+		cache[i].tag = 0;
+		memset(cache[i].data, 0, Cache_block_size);
 	}
-	for(i=0;i<SECONDCACHE_WAY_SIZE*SECONDCACHE_SET_SIZE;i++) {
-		secondcache[i].valid = false;	
+	for(i = 0; i < Cache2_size / Cache2_block_size; i ++){
+		cache2[i].valid_tag = 0;
+		cache2[i].dirty_tag = 0;
+		cache2[i].tag = 0;
+		memset(cache2[i].data, 0, Cache2_block_size);
 	}
 }
 
-//return the cache id
-uint32_t cache_read(hwaddr_t addr) {
-	uint32_t tag = addr>>(CACHE_SET_SIZE_B+CACHE_BLOCK_SIZE_B);
-	uint32_t set = addr>>(CACHE_BLOCK_SIZE_B);
-	set &=(CACHE_SET_SIZE-1);
-	//uint32_t block = (addr>>CACHE_BLOCK_SIZE_B)<<CACHE_BLOCK_SIZE_B;
+int read_cache(hwaddr_t addr){
+	uint32_t group_index = (addr >> Cache_block) & (Cache_group_size - 1);
+	uint32_t tag_index = addr >> (Cache_block + Cache_group);
+	// uint32_t block = (addr >> Cache2_block) << Cache2_block;
 
-	int i;
-	for(i=set*CACHE_WAY_SIZE;i<(set+1)*CACHE_WAY_SIZE;i++) {
-		if(cache[i].valid&&cache[i].tag==tag) {
+	int i, group = group_index * Cache_way_size;
+	for(i = group; i < group + Cache_way_size; i ++){
+		if(cache[i].valid_tag == 1 && cache[i].tag == tag_index)
 			return i;
-		}
 	}
-	// hit miss
-	int j = secondcache_read(addr);
+	int j = read_cache2(addr);
 	srand(i);
-	i = CACHE_WAY_SIZE *set + rand()%CACHE_WAY_SIZE;
-	memcpy(cache[i].data,secondcache[j].data,CACHE_BLOCK_SIZE);
-	
-	/*	
-	srand(i);
-	i = CACHE_WAY_SIZE *set + rand()%CACHE_WAY_SIZE;
-	int j;
-	for(j=0;j<CACHE_BLOCK_SIZE/BURST_LEN;j++) {
-		ddr3read(block+j*BURST_LEN,cache[i].data+j*BURST_LEN);	
-	}
-	*/
-	cache[i].valid = true;
-	cache[i].tag = tag;
+	i = group + rand() % Cache_way_size;
+	memcpy(cache[i].data, cache2[j].data, Cache_block_size);
+	cache[i].valid_tag = 1;
+	cache[i].tag = tag_index;
 	return i;
 }
 
-uint32_t secondcache_read(hwaddr_t addr) {
-	uint32_t tag = addr>>(SECONDCACHE_SET_SIZE_B+SECONDCACHE_BLOCK_SIZE_B);
-	uint32_t set = addr>>(SECONDCACHE_BLOCK_SIZE_B);
-	set &=(SECONDCACHE_SET_SIZE-1);
-	uint32_t block = (addr>>SECONDCACHE_BLOCK_SIZE_B)<<SECONDCACHE_BLOCK_SIZE_B;
+int read_cache2(hwaddr_t addr){
+	uint32_t group_index = (addr >> Cache2_block) & (Cache2_group_size - 1);
+	uint32_t tag_index = addr >> (Cache2_block + Cache2_group);
+	uint32_t block = (addr >> Cache2_block) << Cache2_block;
 
-	int i;
-	for(i=set*SECONDCACHE_WAY_SIZE;i<(set+1)*SECONDCACHE_WAY_SIZE;i++) {
-		if(secondcache[i].valid&&secondcache[i].tag==tag) {
+	int i, group = group_index * Cache2_way_size;
+	for(i = group; i < group + Cache2_way_size; i ++){
+		if(cache2[i].valid_tag == 1 && cache2[i].tag == tag_index){
 			return i;
 		}
 	}
-	// hit miss	
-	srand(i);
-	i = SECONDCACHE_WAY_SIZE *set + rand()%SECONDCACHE_WAY_SIZE;
-	if(secondcache[i].dirty&&secondcache[i].valid) {
-		uint32_t addr2 = (secondcache[i].tag<<(SECONDCACHE_SET_SIZE_B+SECONDCACHE_BLOCK_SIZE_B)) | (set<<(SECONDCACHE_BLOCK_SIZE_B));
-		uint8_t mask[2*BURST_LEN];
-		memset(mask,1,2*BURST_LEN);
-		int j;
-		for(j=0;j<SECONDCACHE_BLOCK_SIZE/BURST_LEN;j++) {
-			ddr3write(addr2+j*BURST_LEN,secondcache[i].data+j*BURST_LEN,mask);		
-		}
-	}
 	int j;
-	for(j=0;j<SECONDCACHE_BLOCK_SIZE/BURST_LEN;j++) {
-		ddr3read(block+j*BURST_LEN,secondcache[i].data+j*BURST_LEN);	
+	srand(0);
+	i = group + rand() % Cache2_way_size;
+	if(cache2[i].dirty_tag == 1 && cache2[i].valid_tag == 1){
+		uint8_t mask[BURST_LEN * 2];
+		uint32_t block2 = (cache2[i].tag << (Cache2_block + Cache2_group)) | (group_index << Cache2_block);
+		memset(mask, 1, sizeof(mask));
+		for(j = 0; j < Cache2_block_size / BURST_LEN; j ++)
+			ddr3_write_public(block2+j*BURST_LEN, cache2[i].data+j*BURST_LEN, mask);
 	}
-	
-	secondcache[i].valid = true;
-	secondcache[i].tag = tag;
-	secondcache[i].dirty = false;
-	
+	for(j = 0; j < Cache2_block_size / BURST_LEN; j ++)
+		ddr3_read_public(block+j*BURST_LEN, cache2[i].data+j*BURST_LEN);
+	cache2[i].valid_tag = 1;
+	cache2[i].tag = tag_index;
+	cache2[i].dirty_tag = 0;
 	return i;
 }
 
-void cache_write(hwaddr_t addr,size_t len,uint32_t data) {
-	uint32_t tag = addr>>(CACHE_SET_SIZE_B+CACHE_BLOCK_SIZE_B);
-	uint32_t set = addr>>(CACHE_BLOCK_SIZE_B);
-	set &=(CACHE_SET_SIZE-1);
-	uint32_t offset = addr&(CACHE_BLOCK_SIZE-1);
-	
-	int i;
-	for(i=set*CACHE_WAY_SIZE;i<(set+1)*CACHE_WAY_SIZE;i++) {
-		if(cache[i].valid&&cache[i].tag==tag) {
-			if(offset+len>CACHE_BLOCK_SIZE) {
-				//dram_write(addr,CACHE_BLOCK_SIZE-offset,data); //write through
-				memcpy(cache[i].data+offset,&data,CACHE_BLOCK_SIZE-offset);
-				secondcache_write(addr,CACHE_BLOCK_SIZE-offset,data);
-				cache_write(addr+CACHE_BLOCK_SIZE-offset,len-(CACHE_BLOCK_SIZE-offset),data>>(CACHE_BLOCK_SIZE-offset));
-			}	
-			else {	
-				//dram_write(addr,len,data); //write through 
-				memcpy(cache[i].data+offset,&data,len);	
-				secondcache_write(addr,len,data);		
+void write_cache(hwaddr_t addr, size_t size, uint32_t data){
+	uint32_t group_index = (addr >> Cache_block) & (Cache_group_size - 1);
+	uint32_t tag_index = addr >> (Cache_block + Cache_group);
+	uint32_t offset = addr & (Cache_block_size - 1);
+
+	int i, group = group_index * Cache_way_size;
+	for(i = group; i < group + Cache_way_size; i ++){
+		if(cache[i].valid_tag == 1 && cache[i].tag == tag_index){
+			if(offset + size > Cache_block_size){
+				memcpy(cache[i].data+offset, &data, Cache_block_size-offset);
+				write_cache2(addr, Cache_block_size-offset, data);
+				write_cache(addr+Cache_block_size-offset, size-(Cache_block_size-offset), data>>(Cache_block_size-offset));
+			}else{
+				memcpy(cache[i].data+offset, &data, size);
+				write_cache2(addr, size, data);
 			}
 			return ;
 		}
 	}
-	
-	secondcache_write(addr,len,data);	
+	write_cache2(addr, size, data);
 }
 
-void secondcache_write(hwaddr_t addr,size_t len,uint32_t data) {
-	uint32_t tag = addr>>(SECONDCACHE_SET_SIZE_B+SECONDCACHE_BLOCK_SIZE_B);
-	uint32_t set = addr>>(SECONDCACHE_BLOCK_SIZE_B);
-	set &=(SECONDCACHE_SET_SIZE-1);
-	uint32_t offset = addr&(SECONDCACHE_BLOCK_SIZE-1);
-	
-	int i;
-	for(i=set*SECONDCACHE_WAY_SIZE;i<(set+1)*SECONDCACHE_WAY_SIZE;i++) {
-		if(secondcache[i].valid&&secondcache[i].tag==tag) {
-			secondcache[i].dirty = true;
-			if(offset+len>SECONDCACHE_BLOCK_SIZE) {
-				//dram_write(addr,SECONDCACHE_BLOCK_SIZE-offset,data);
-				memcpy(secondcache[i].data+offset,&data,SECONDCACHE_BLOCK_SIZE-offset);
-				secondcache_write(addr+SECONDCACHE_BLOCK_SIZE-offset,len-(SECONDCACHE_BLOCK_SIZE-offset),data>>(SECONDCACHE_BLOCK_SIZE-offset));
-			}	
-			else {	
-				//dram_write(addr,len,data);
-				memcpy(secondcache[i].data+offset,&data,len);			
+void write_cache2(hwaddr_t addr, size_t size, uint32_t data){
+	uint32_t group_index = (addr >> Cache2_block) & (Cache2_group_size - 1);
+	uint32_t tag_index = addr >> (Cache2_block + Cache2_group);
+	uint32_t offset = addr & (Cache2_block_size - 1);
+
+	int i, group = group_index * Cache2_way_size;
+	for(i = group; i < group + Cache2_way_size; i ++){
+		if(cache2[i].valid_tag == 1 && cache2[i].tag == tag_index){
+			cache2[i].dirty_tag = 1;
+			if(offset + size > Cache2_block_size){
+				memcpy(cache2[i].data+offset, &data, Cache2_block_size-offset);
+				write_cache2(addr+Cache2_block_size-offset, size-(Cache2_block_size-offset), data>>(Cache2_block_size-offset));
+			}else{
+				memcpy(cache2[i].data+offset, &data, size);
 			}
 			return ;
 		}
 	}
-	
-	int j = secondcache_read(addr);
-	secondcache[j].dirty = true;
-	memcpy(secondcache[j].data+offset,&data,len);
-	//dram_write(addr,len,data);	
+	int j = read_cache2(addr);
+	cache2[j].dirty_tag = 1;
+	memcpy(cache2[j].data + offset, &data, size);
 }

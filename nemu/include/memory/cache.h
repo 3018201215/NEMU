@@ -1,41 +1,45 @@
 #ifndef __CACHE_H__
 #define __CACHE_H__
 
-#define CACHE_BLOCK_SIZE_B 6
-#define CACHE_WAY_SIZE_B 3
-#define CACHE_SET_SIZE_B 7
-#define CACHE_BLOCK_SIZE (1<<CACHE_BLOCK_SIZE_B)
-#define CACHE_WAY_SIZE (1<<CACHE_WAY_SIZE_B)
-#define CACHE_SET_SIZE (1<<CACHE_SET_SIZE_B)
+#include "common.h"
 
-#define SECONDCACHE_BLOCK_SIZE_B 6
-#define SECONDCACHE_WAY_SIZE_B 4
-#define SECONDCACHE_SET_SIZE_B 12
-#define SECONDCACHE_BLOCK_SIZE (1<<SECONDCACHE_BLOCK_SIZE_B)
-#define SECONDCACHE_WAY_SIZE (1<<SECONDCACHE_WAY_SIZE_B)
-#define SECONDCACHE_SET_SIZE (1<<SECONDCACHE_SET_SIZE_B)
+#define Cache_block_size 64
+#define Cache_size 64 * 1024
+#define Cache_way 3
+#define Cache_block 6
+#define Cache_group 7
+#define Cache_group_size (1 << Cache_group)
+#define Cache_way_size (1 << Cache_way)
 
-uint64_t MTIME;
+#define Cache2_block_size 64
+#define Cache2_size 4 * 1024 * 1024
+#define Cache2_way 4
+#define Cache2_block 6
+#define Cache2_group 12
+#define Cache2_group_size (1 << Cache_group)
+#define Cache2_way_size (1 << Cache_way)
 
-typedef struct {
-	bool valid;
+
+typedef struct CacheBlock{
+	uint8_t data[Cache_block_size];
 	uint32_t tag;
-	uint8_t data[CACHE_BLOCK_SIZE];	
-}Cache;
+	bool valid_tag;
+}CacheBlock;
 
-typedef struct {
-	bool valid,dirty;
+typedef struct CacheBlock2{
+	uint8_t data[Cache2_block_size];
 	uint32_t tag;
-	uint8_t data[SECONDCACHE_BLOCK_SIZE];	
-}SECONDCache;
+	bool valid_tag, dirty_tag;
+}CacheBlock2;
 
-Cache cache[CACHE_WAY_SIZE*CACHE_SET_SIZE];
-SECONDCache secondcache[SECONDCACHE_WAY_SIZE*SECONDCACHE_SET_SIZE];
+CacheBlock cache[Cache_size / Cache_block_size];
+CacheBlock2 cache2[Cache2_size / Cache2_block_size];
 
-void cache_init();
-uint32_t cache_read(hwaddr_t addr);
-void cache_write(hwaddr_t addr,size_t len,uint32_t data);
-uint32_t secondcache_read(hwaddr_t addr);
-void secondcache_write(hwaddr_t addr,size_t len,uint32_t data);
+void init_cache();
+int read_cache(hwaddr_t);
+void write_cache(hwaddr_t, size_t, uint32_t);
+int read_cache2(hwaddr_t);
+void write_cache2(hwaddr_t, size_t, uint32_t);
 
 #endif
+
