@@ -24,22 +24,34 @@ void init_cache(){
 	}
 }
 
-int read_cache(hwaddr_t addr){
-	uint32_t group_index = (addr >> Cache_block) & (Cache_group_size - 1);
-	uint32_t tag_index = addr >> (Cache_block + Cache_group);
-	// uint32_t block = (addr >> Cache2_block) << Cache2_block;
+uint32_t read_cache(hwaddr_t addr) {
+	uint32_t tag = addr>>(Cache_group+Cache_block);
+	uint32_t set = addr>>(Cache_block);
+	set &=(Cache_group_size-1);
+	//uint32_t block = (addr>>Cache_block)<<Cache_block;
 
-	int i, group = group_index * Cache_way_size;
-	for(i = group; i < group + Cache_way_size; i ++){
-		if(cache[i].valid == 1 && cache[i].tag == tag_index)
+	int i;
+	for(i=set*Cache_way_size;i<(set+1)*Cache_way_size;i++) {
+		if(cache[i].valid&&cache[i].tag==tag) {
 			return i;
+		}
 	}
+	// hit miss
 	int j = read_cache2(addr);
 	srand(i);
-	i = group + rand() % Cache_way_size;
-	memcpy(cache[i].data, cache2[j].data, Cache_block_size);
-	cache[i].valid = 1;
-	cache[i].tag = tag_index;
+	i = Cache_way_size *set + rand()%Cache_way_size;
+	memcpy(cache[i].data,cache2[j].data,Cache_block_size);
+	
+	/*	
+	srand(i);
+	i = Cache_way_size *set + rand()%Cache_way_size;
+	int j;
+	for(j=0;j<Cache_block_size/BURST_LEN;j++) {
+		ddr3read(block+j*BURST_LEN,cache[i].data+j*BURST_LEN);	
+	}
+	*/
+	cache[i].valid = true;
+	cache[i].tag = tag;
 	return i;
 }
 

@@ -36,7 +36,7 @@ CacheBlock cache[Cache_size / Cache_block_size];
 CacheBlock2 cache2[Cache2_size / Cache2_block_size];
 
 void init_cache();
-int read_cache(hwaddr_t);
+uint32_t read_cache(hwaddr_t);
 void write_cache(hwaddr_t, size_t, uint32_t);
 uint32_t read_cache2(hwaddr_t);
 void write_cache2(hwaddr_t, size_t, uint32_t);
