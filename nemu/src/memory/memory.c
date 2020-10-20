@@ -10,18 +10,19 @@ void dram_write(hwaddr_t, size_t, uint32_t);
 /* Memory accessing interfaces */
 
 uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
-	int l1 = read_cache(addr);
-	uint32_t offset = addr & (Cache_block_size - 1);
-	uint8_t ret[BURST_LEN * 2];
-	if(offset + len > Cache_block_size){
-		int l2 = read_cache(addr + Cache_block_size - offset);
-		memcpy(ret, cache[l1].data + offset, Cache_block_size - offset);
-		memcpy(ret+Cache_block_size-offset, cache[l2].data, len-(Cache_block_size-offset));
-	}else{
-		memcpy(ret, cache[l1].data+offset, len);
+	int id = read_cache(addr);
+	uint32_t offset = addr&(Cache_block_size-1);
+	uint8_t tmp[2*BURST_LEN];
+	if(offset+len>Cache_block_size) {
+		int id2 = read_cache(addr+Cache_block_size-offset);	
+		memcpy(tmp,cache[id].data+offset,Cache_block_size-offset);
+		memcpy(tmp+Cache_block_size-offset,cache[id2].data,len-(Cache_block_size-offset));
 	}
-	int tmp = 0;
-	uint32_t ans = unalign_rw(ret + tmp, 4) & (~0u >> ((4 - len) << 3));
+	else {
+		memcpy(tmp,cache[id].data+offset,len);
+	}
+	int zero=0;
+	uint32_t ans = unalign_rw(tmp+zero,4)&(~0u >> ((4 - len) << 3));
 	return ans;
 	//return dram_read(addr, len) & (~0u >> ((4 - len) << 3));
 }

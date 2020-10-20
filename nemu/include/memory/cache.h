@@ -23,13 +23,13 @@
 typedef struct CacheBlock{
 	uint8_t data[Cache_block_size];
 	uint32_t tag;
-	bool valid_tag;
+	bool valid;
 }CacheBlock;
 
 typedef struct CacheBlock2{
 	uint8_t data[Cache2_block_size];
 	uint32_t tag;
-	bool valid_tag, dirty_tag;
+	bool valid, dirty;
 }CacheBlock2;
 
 CacheBlock cache[Cache_size / Cache_block_size];
@@ -38,7 +38,7 @@ CacheBlock2 cache2[Cache2_size / Cache2_block_size];
 void init_cache();
 int read_cache(hwaddr_t);
 void write_cache(hwaddr_t, size_t, uint32_t);
-int read_cache2(hwaddr_t);
+uint32_t read_cache2(hwaddr_t);
 void write_cache2(hwaddr_t, size_t, uint32_t);
 
 #endif
