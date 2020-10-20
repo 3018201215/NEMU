@@ -32,8 +32,8 @@ typedef struct CacheBlock2{
 	bool valid, dirty;
 }CacheBlock2;
 
-CacheBlock cache[Cache_size / Cache_block_size];
-CacheBlock2 cache2[Cache2_size / Cache2_block_size];
+CacheBlock cache[Cache_way_size * Cache_group_size];
+CacheBlock2 cache2[Cache2_way_size * Cache2_group_size];
 
 void init_cache();
 uint32_t read_cache(hwaddr_t);
