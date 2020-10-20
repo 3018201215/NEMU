@@ -12,15 +12,10 @@ void ddr3_write_public(hwaddr_t, void* , uint8_t* );
 void init_cache(){
 	int i;
 	for(i = 0; i < Cache_size / Cache_block_size; i ++){
-		cache[i].valid = 0;
-		cache[i].tag = 0;
-		memset(cache[i].data, 0, Cache_block_size);
+		cache[i].valid = false;
 	}
 	for(i = 0; i < Cache2_size / Cache_block_size; i ++){
-		cache2[i].valid = 0;
-		cache2[i].dirty = 0;
-		cache2[i].tag = 0;
-		memset(cache2[i].data, 0, Cache_block_size);
+		cache2[i].valid = false;
 	}
 }
 

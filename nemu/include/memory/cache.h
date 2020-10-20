@@ -16,8 +16,8 @@
 #define Cache2_way 4
 #define Cache2_block 6
 #define Cache2_group 12
-#define Cache2_group_size (1 << Cache_group)
-#define Cache2_way_size (1 << Cache_way)
+#define Cache2_group_size (1 << Cache2_group)
+#define Cache2_way_size (1 << Cache2_way)
 
 
 typedef struct CacheBlock{
