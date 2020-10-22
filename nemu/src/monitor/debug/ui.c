@@ -74,7 +74,7 @@ static int cmd_x(char *args){
 	uint32_t num = expr(&b , &suc);
 	if(!suc) assert(0);
 	for( i = 0; i < a; i ++){
-		printf("Address: 0x%X  Value: 0x%X\n" , num+i*4 , swaddr_read(num+i*4 , 4));
+		printf("Address: 0x%X  Value: 0x%X\n" , num+i*4 , swaddr_read(num+i*4 , 4, R_DS));
 	}
 	return 0;
 }
@@ -110,12 +110,12 @@ static int cmd_bt(char *args){
 		printf("%s (", ss);
 		int i;
 		for(i = 0; i < 4; i++){
-			s.args[i] = swaddr_read(addr+8+4*i, 4);
+			s.args[i] = swaddr_read(addr+8+4*i, 4, R_SS);
 			printf("%d", s.args[i]);
 			printf("%c ",i == 3 ? ')' : ',');
 		}
-		s.ret_addr = swaddr_read(addr+4, 4);
-		s.prev_ebp = swaddr_read(addr, 4);
+		s.ret_addr = swaddr_read(addr+4, 4, R_SS);
+		s.prev_ebp = swaddr_read(addr, 4, R_SS);
 		addr = s.prev_ebp;
 		printf("\n"); 
 	}

@@ -247,7 +247,7 @@ uint32_t eval(int p, int q){
 		if( p == op || tokens[op].type == M || tokens[op].type == P || tokens[op].type == NO){
 			uint32_t val = eval(op+1 , q);
 			switch(tokens[op].type){
-				case P: return swaddr_read(val , 4);
+				case P: return swaddr_read(val , 4, R_DS);
 				case M: return -val;
 				case NO: return !val;
 				default: assert(0);
