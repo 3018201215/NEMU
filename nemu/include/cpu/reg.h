@@ -118,6 +118,23 @@ typedef struct{
 	};
 }SEG_descriptor;
 
+typedef union {
+	struct {
+		uint8_t p : 1;
+		uint8_t rw : 1;
+		uint8_t us : 1;
+		uint8_t pwt : 1;
+		uint8_t pcd : 1;
+		uint8_t a : 1;
+		uint8_t d : 1;
+		uint8_t ps : 1;
+		uint8_t g : 1;
+		uint8_t avail : 3;
+		uint32_t base : 20;
+	};
+	uint32_t val;
+} Page_entry;
+
 extern CPU_state cpu;
 SEG_descriptor *seg_des;
 

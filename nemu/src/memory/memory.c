@@ -15,6 +15,26 @@ lnaddr_t seg_translate(swaddr_t addr, size_t len, uint8_t sreg){
 	return cpu.sreg[sreg].base_addr + addr;
 }
 
+hwaddr_t page_translate(lnaddr_t addr,size_t len) {
+	if(cpu.cr0.paging == 1 && cpu.cr0.protect_enable == 1) {
+		uint32_t dir = addr >> 22; 
+		uint32_t page = (addr >> 12) & 0x3ff;
+		uint32_t offset = addr & 0xfff;
+		Page_entry dir_1,page_1;
+		dir_1.val = hwaddr_read((cpu.cr3.page_directory_base<<12)+(dir<<2),4);
+		Assert(dir_1.p,"Invalid page");
+		page_1.val = hwaddr_read((dir_1.base<<12)+(page<<2),4);
+		Assert(page_1.p,"Invalid page");
+		hwaddr_t hwaddr = (page_1.base<<12)+offset;
+		//Assert((hwaddr&0xfff)+len==((hwaddr+len)&0xfff),"Fatal Error");
+		return hwaddr;
+	}
+	else {
+		return addr;
+	}
+}
+
+
 uint32_t hwaddr_read(hwaddr_t addr, size_t len) {
 	int id = read_cache(addr);
 	uint32_t offset = addr&(Cache_block_size-1);
@@ -39,11 +59,30 @@ void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
 }
 
 uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
-	return hwaddr_read(addr, len);
+	uint32_t offset = addr & 0xfff;
+	if(offset + len - 1 > 0xfff){
+		size_t ad = 0xfff - offset + 1;
+		uint32_t addr_r = hwaddr_read(addr, ad);
+		uint32_t addr_l = hwaddr_read(addr + ad, len - ad);
+		uint32_t hwaddr = (addr_l << (ad << 3)) | addr_r;
+		return hwaddr;
+	}else{
+		hwaddr_t hwaddr = page_translate(addr, len);
+		return hwaddr_read(hwaddr, len);
+	}
 }
 
 void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
-	hwaddr_write(addr, len, data);
+	uint32_t offset = addr & 0xfff;
+	if(offset + len - 1 > 0xfff){
+		size_t ad = 0xfff - offset + 1;
+		lnaddr_write(addr, ad, data & ((1 << (ad << 3)) - 1));
+		lnaddr_write(addr + ad, len - ad, data >> (ad << 3));
+	}else{
+		hwaddr_t hwaddr = page_translate(addr, len);
+		hwaddr_write(hwaddr, len, data);
+	}
+
 }
 
 uint32_t swaddr_read(swaddr_t addr, size_t len, uint8_t sreg) {
