@@ -60,29 +60,29 @@ void hwaddr_write(hwaddr_t addr, size_t len, uint32_t data) {
 }
 
 uint32_t lnaddr_read(lnaddr_t addr, size_t len) {
-	uint32_t offset = addr & 0xfff;
-	if(offset + len - 1 > 0xfff){
-		size_t ad = 0xfff - offset + 1;
-		uint32_t addr_r = hwaddr_read(addr, ad);
-		uint32_t addr_l = hwaddr_read(addr + ad, len - ad);
-		uint32_t hwaddr = (addr_l << (ad << 3)) | addr_r;
-		return hwaddr;
-	}else{
+	// uint32_t offset = addr & 0xfff;
+	// if(offset + len - 1 > 0xfff){
+	// 	size_t ad = 0xfff - offset + 1;
+	// 	uint32_t addr_r = hwaddr_read(addr, ad);
+	// 	uint32_t addr_l = hwaddr_read(addr + ad, len - ad);
+	// 	uint32_t hwaddr = (addr_l << (ad << 3)) | addr_r;
+	// 	return hwaddr;
+	// }else{
 		hwaddr_t hwaddr = page_translate(addr, len);
 		return hwaddr_read(hwaddr, len);
-	}
+	//}
 }
 
 void lnaddr_write(lnaddr_t addr, size_t len, uint32_t data) {
-	uint32_t offset = addr & 0xfff;
-	if(offset + len - 1 > 0xfff){
-		size_t ad = 0xfff - offset + 1;
-		lnaddr_write(addr, ad, data & ((1 << (ad << 3)) - 1));
-		lnaddr_write(addr + ad, len - ad, data >> (ad << 3));
-	}else{
+	// uint32_t offset = addr & 0xfff;
+	// if(offset + len - 1 > 0xfff){
+	// 	size_t ad = 0xfff - offset + 1;
+	// 	lnaddr_write(addr, ad, data & ((1 << (ad << 3)) - 1));
+	// 	lnaddr_write(addr + ad, len - ad, data >> (ad << 3));
+	// }else{
 		hwaddr_t hwaddr = page_translate(addr, len);
 		hwaddr_write(hwaddr, len, data);
-	}
+	// }
 
 }
 
