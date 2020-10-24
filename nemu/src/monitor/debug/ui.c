@@ -2,6 +2,7 @@
 #include "monitor/expr.h"
 #include "monitor/watchpoint.h"
 #include "nemu.h"
+#include "memory/memory.h"
 
 #include <stdlib.h>
 #include <readline/readline.h>
@@ -133,6 +134,13 @@ static int cmd_w(char *args){
 	return 0;
 }
 
+uint32_t to_page(uint32_t addr, int *flag);
+
+static int cmd_page(char *agrs){
+
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -148,6 +156,7 @@ static struct {
 	{ "d", "Delete a watchpoint through it's NO", cmd_d},
 	{ "w", "Set up a watchpoint", cmd_w},
 	{ "bt", "Print the part of the stackframe", cmd_bt},
+	{ "page", "Translate the address to the page address", cmd_page},
 	/* TODO: Add more commands */
 
 };

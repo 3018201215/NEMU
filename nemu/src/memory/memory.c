@@ -31,10 +31,29 @@ hwaddr_t page_translate(lnaddr_t addr,size_t len) {
 		hwaddr_t hwaddr = (page_1.base<<12)+offset;
 		write_tlb(addr, hwaddr);
 		return hwaddr;
-	}
-	else {
-		return addr;
-	}
+	}else return addr;
+}
+
+uint32_t to_page(uint32_t addr, int* flag){
+	if(cpu.cr0.paging == 1 && cpu.cr0.protect_enable == 1) {
+		uint32_t dir = addr >> 22;
+		uint32_t page = (addr >> 12) & 0x3ff;
+		uint32_t offset = addr & 0xfff;
+
+		Page_entry dir_1,page_1;
+		dir_1.val = hwaddr_read((cpu.cr3.page_directory_base<<12)+(dir<<2),4);
+		if(!dir_1.p){
+			*flag = 1;
+			return 0;
+		}
+		page_1.val = hwaddr_read((dir_1.base<<12)+(page<<2),4);
+		if(!page_1.p){
+			*flag = 2;
+			return 0;
+		}
+		hwaddr_t hwaddr = (page_1.base<<12)+offset;
+		return hwaddr;
+	}else return addr;
 }
 
 
