@@ -137,7 +137,13 @@ static int cmd_w(char *args){
 uint32_t to_page(uint32_t addr, int *flag);
 
 static int cmd_page(char *agrs){
-
+	uint32_t addr;
+	int flag = 0;
+	sscanf(agrs, "%x", &addr);
+	uint32_t page_addr = to_page(addr, &flag);
+	if(flag == 0) printf("the address is 0x%X, and the page is 0x%X\n", addr, page_addr);
+	else if(flag == 1) printf("Dir is not used");
+	else printf("Page is not used");
 	return 0;
 }
 
