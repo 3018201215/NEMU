@@ -15,6 +15,6 @@ TLB tlb[tlb_size];
 
 void init_tlb();
 int read_tlb(uint32_t);
-void write_read(uint32_t, uint32_t);
+void write_tlb(uint32_t, uint32_t);
 
 #endif
